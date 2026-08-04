@@ -1,1175 +1,2116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar-SA" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="شمس">
-<title>نظام إدارة العقود شمس</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    font-family: "Segoe UI", Tahoma, Arial, sans-serif;
-    background: #f1f5f9;
-    color: #0f172a;
-    padding: 14px;
-  }
-  .app { max-width: 1200px; margin: 0 auto; }
-  header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
-  header h1 { font-size: 20px; color: #0f766e; }
-  .stats { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; }
-  .stat {
-    background: #fff; border: 1px solid #e2e8f0; border-radius: 10px;
-    padding: 8px 14px; font-size: 13px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
-    flex: 1; text-align: center; white-space: nowrap;
-  }
-  .stat b { color: #0f766e; font-size: 16px; display: block; }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="شمس" />
+    <title>نظام إدارة العقود شمس</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        -webkit-text-size-adjust: 100%;
+      }
+      body {
+        font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+        background: #f1f5f9;
+        color: #0f172a;
+        padding: 14px;
+      }
+      .app {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      header h1 {
+        font-size: 20px;
+        color: #0f766e;
+      }
+      .stats {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      .stat {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 8px 14px;
+        font-size: 13px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        flex: 1;
+        text-align: center;
+        white-space: nowrap;
+      }
+      .stat b {
+        color: #0f766e;
+        font-size: 16px;
+        display: block;
+      }
 
-  .toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 14px; }
-  .tabs { display: flex; flex-wrap: wrap; gap: 4px; background: #e2e8f0; padding: 4px; border-radius: 12px; width: 100%; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
-  .tabs::-webkit-scrollbar { display: none; }
-  .tabs button {
-    border: none; background: transparent; padding: 10px 8px; border-radius: 9px;
-    cursor: pointer; font-size: 14px; color: #475569; font-family: inherit;
-    flex: 1 0 auto; white-space: nowrap; touch-action: manipulation;
-  }
-  .tabs button.active { background: #fff; color: #0f766e; font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
-  .tabs button .cnt { font-size: 12px; opacity: .7; }
-  .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; width: 100%; }
-  .search {
-    padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px;
-    font-size: 15px; flex: 1; min-width: 0; font-family: inherit;
-  }
-  .btn {
-    border: none; border-radius: 10px; padding: 10px 16px; cursor: pointer;
-    font-size: 14px; font-weight: 700; font-family: inherit;
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    touch-action: manipulation;
-  }
-  .btn-primary { background: #0f766e; color: #fff; }
-  .btn-primary:active { background: #115e59; }
-  .btn-danger { background: #fee2e2; color: #b91c1c; }
-  .btn-success { background: #dcfce7; color: #15803d; }
-  .btn-sm { padding: 7px 12px; font-size: 13px; font-weight: 600; }
-  .btn-outline { background: #e2e8f0; color: #334155; }
-  .btn-outline:active { background: #cbd5e1; }
+      .toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        background: #e2e8f0;
+        padding: 4px;
+        border-radius: 12px;
+        width: 100%;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .tabs::-webkit-scrollbar {
+        display: none;
+      }
+      .tabs button {
+        border: none;
+        background: transparent;
+        padding: 10px 8px;
+        border-radius: 9px;
+        cursor: pointer;
+        font-size: 14px;
+        color: #475569;
+        font-family: inherit;
+        flex: 1 0 auto;
+        white-space: nowrap;
+        touch-action: manipulation;
+      }
+      .tabs button.active {
+        background: #fff;
+        color: #0f766e;
+        font-weight: 700;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      }
+      .tabs button .cnt {
+        font-size: 12px;
+        opacity: 0.7;
+      }
+      .controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        width: 100%;
+      }
+      .search {
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 15px;
+        flex: 1;
+        min-width: 0;
+        font-family: inherit;
+      }
+      .btn {
+        border: none;
+        border-radius: 10px;
+        padding: 10px 16px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        font-family: inherit;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        touch-action: manipulation;
+      }
+      .btn-primary {
+        background: #0f766e;
+        color: #fff;
+      }
+      .btn-primary:active {
+        background: #115e59;
+      }
+      .btn-danger {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+      .btn-success {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .btn-sm {
+        padding: 7px 12px;
+        font-size: 13px;
+        font-weight: 600;
+      }
+      .btn-outline {
+        background: #e2e8f0;
+        color: #334155;
+      }
+      .btn-outline:active {
+        background: #cbd5e1;
+      }
 
-  .table-wrap { background: #fff; border-radius: 12px; border: 1px solid #e2e8f0; overflow-x: auto; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
-  table { width: 100%; border-collapse: collapse; min-width: 900px; }
-  th, td { padding: 10px 12px; text-align: right; font-size: 14px; border-bottom: 1px solid #eef2f7; white-space: nowrap; }
-  th { background: #f8fafc; color: #64748b; font-size: 12px; text-transform: uppercase; }
-  tr:hover td { background: #f8fafc; }
-  td.notes-cell { white-space: pre-line; max-width: 220px; color: #475569; }
-  td.soon { color: #ea580c; font-weight: 700; }
-  .hijri-sub { font-size: 11px; color: #94a3b8; font-weight: 400; margin-top: 2px; }
-  td.soon .hijri-sub { color: #fdba74; }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-  .badge-current { background: #dcfce7; color: #15803d; }
-  .badge-active { background: #dbeafe; color: #1d4ed8; }
-  .badge-ended { background: #f1f5f9; color: #64748b; }
-  .badge-soon { background: #ffedd5; color: #ea580c; }
-  .actions { display: flex; gap: 6px; flex-wrap: wrap; }
-  .chev { display: none; }
-  .empty-cell { text-align: center; }
-  .empty {
-    display: flex; align-items: center; justify-content: center;
-    min-height: 220px; padding: 40px 20px; color: #94a3b8; font-size: 15px;
-  }
+      .table-wrap {
+        background: #fff;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        overflow-x: auto;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        min-width: 900px;
+      }
+      th,
+      td {
+        padding: 10px 12px;
+        text-align: right;
+        font-size: 14px;
+        border-bottom: 1px solid #eef2f7;
+        white-space: nowrap;
+      }
+      th {
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+      tr:hover td {
+        background: #f8fafc;
+      }
+      td.notes-cell {
+        white-space: pre-line;
+        max-width: 220px;
+        color: #475569;
+      }
+      td.soon {
+        color: #ea580c;
+        font-weight: 700;
+      }
+      .hijri-sub {
+        font-size: 11px;
+        color: #94a3b8;
+        font-weight: 400;
+        margin-top: 2px;
+      }
+      td.soon .hijri-sub {
+        color: #fdba74;
+      }
+      .badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .badge-current {
+        background: #dcfce7;
+        color: #15803d;
+      }
+      .badge-active {
+        background: #dbeafe;
+        color: #1d4ed8;
+      }
+      .badge-ended {
+        background: #f1f5f9;
+        color: #64748b;
+      }
+      .badge-soon {
+        background: #ffedd5;
+        color: #ea580c;
+      }
+      .actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+      }
+      .chev {
+        display: none;
+      }
+      .empty-cell {
+        text-align: center;
+      }
+      .empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 220px;
+        padding: 40px 20px;
+        color: #94a3b8;
+        font-size: 15px;
+      }
 
-  .overlay {
-    position: fixed; inset: 0; background: rgba(15,23,42,.5);
-    display: none; align-items: center; justify-content: center; padding: 16px; z-index: 50;
-  }
-  .overlay.show { display: flex; }
-  .overlay.cal { z-index: 80; align-items: center; padding: 16px; }
-  .modal {
-    background: #fff; border-radius: 14px; width: 100%; max-width: 640px;
-    max-height: 90vh; overflow-y: auto; padding: 20px; box-shadow: 0 20px 50px rgba(0,0,0,.25);
-  }
-  .modal h2 { font-size: 18px; margin-bottom: 16px; color: #0f766e; }
-  .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-  .field { display: flex; flex-direction: column; gap: 5px; }
-  .field label { font-size: 13px; font-weight: 600; color: #475569; }
-  .field label .req { color: #dc2626; }
-  .field input, .field textarea {
-    padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px;
-    font-size: 16px; font-family: inherit; outline: none; width: 100%;
-  }
-  .field input:focus, .field textarea:focus { border-color: #0f766e; box-shadow: 0 0 0 3px rgba(15,118,110,.15); }
-  .field input.date-input { cursor: pointer; background: #fff; }
-  .dur-toggle { display: flex; gap: 6px; }
-  .dur-toggle button {
-    flex: 1; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px;
-    background: #f8fafc; color: #334155; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; touch-action: manipulation;
-  }
-  .dur-toggle button.active { background: #0f766e; color: #fff; border-color: #0f766e; }
-  .dur-presets { display: flex; flex-wrap: wrap; gap: 6px; }
-  .dur-presets button {
-    flex: 1 0 auto; padding: 9px 10px; border: 1px solid #cbd5e1; border-radius: 10px;
-    background: #f8fafc; color: #334155; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap; touch-action: manipulation;
-  }
-  .dur-presets button.active { background: #0f766e; color: #fff; border-color: #0f766e; }
-  .field.full { grid-column: 1 / -1; }
-  .field textarea { resize: vertical; min-height: 70px; }
-  .hijri-hint { font-size: 12px; color: #94a3b8; min-height: 16px; }
-  .error { color: #dc2626; font-size: 13px; margin-top: 10px; min-height: 18px; }
-  .modal-actions { display: flex; gap: 10px; margin-top: 16px; }
-  .modal-actions .btn { flex: 1; }
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+        z-index: 50;
+      }
+      .overlay.show {
+        display: flex;
+      }
+      .overlay.cal {
+        z-index: 80;
+        align-items: center;
+        padding: 16px;
+      }
+      .modal {
+        background: #fff;
+        border-radius: 14px;
+        width: 100%;
+        max-width: 640px;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: 20px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+      }
+      .modal h2 {
+        font-size: 18px;
+        margin-bottom: 16px;
+        color: #0f766e;
+      }
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 12px;
+      }
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+      .field label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+      }
+      .field label .req {
+        color: #dc2626;
+      }
+      .field input,
+      .field textarea {
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 16px;
+        font-family: inherit;
+        outline: none;
+        width: 100%;
+      }
+      .field input:focus,
+      .field textarea:focus {
+        border-color: #0f766e;
+        box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+      }
+      .field input.date-input {
+        cursor: pointer;
+        background: #fff;
+      }
+      .dur-toggle {
+        display: flex;
+        gap: 6px;
+      }
+      .dur-toggle button {
+        flex: 1;
+        padding: 10px 12px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: #334155;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        touch-action: manipulation;
+      }
+      .dur-toggle button.active {
+        background: #0f766e;
+        color: #fff;
+        border-color: #0f766e;
+      }
+      .dur-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+      }
+      .dur-presets button {
+        flex: 1 0 auto;
+        padding: 9px 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: #334155;
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        white-space: nowrap;
+        touch-action: manipulation;
+      }
+      .dur-presets button.active {
+        background: #0f766e;
+        color: #fff;
+        border-color: #0f766e;
+      }
+      .field.full {
+        grid-column: 1 / -1;
+      }
+      .field textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+      .hijri-hint {
+        font-size: 12px;
+        color: #94a3b8;
+        min-height: 16px;
+      }
+      .error {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: 10px;
+        min-height: 18px;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 16px;
+      }
+      .modal-actions .btn {
+        flex: 1;
+      }
 
-  .cal-modal { max-width: 340px; }
-  .cal-head { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
-  .cal-head .btn { flex: 1; }
-  .cal-nav { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; }
-  .cal-nav .nav-btn {
-    border: 1px solid #cbd5e1; background: #f8fafc; border-radius: 8px;
-    width: 38px; height: 38px; font-size: 20px; cursor: pointer; color: #334155; line-height: 1;
-  }
-  .cal-nav .nav-btn:active { background: #e2e8f0; }
-  .cal-title { font-weight: 700; font-size: 15px; text-align: center; }
-  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
-  .cal-grid .dow { font-size: 12px; color: #94a3b8; padding: 6px 0; font-weight: 600; }
-  .cal-grid .day {
-    padding: 8px 0; border: none; background: transparent; border-radius: 8px;
-    cursor: pointer; font-size: 14px; font-family: inherit; color: #0f172a;
-  }
-  .cal-grid .day:hover { background: #e2e8f0; }
-  .cal-grid .day.disabled { color: #cbd5e1; cursor: not-allowed; }
-  .cal-grid .day.disabled:hover { background: transparent; }
-  .cal-grid .day.today { border: 2px solid #0f766e; color: #0f766e; padding: 6px 0; font-weight: 700; }
-  .cal-grid .day.selected { background: #0f766e; color: #fff; font-weight: 700; }
-  .cal-grid .day.selected.today { border-color: #0f766e; }
-  .cal-hint { text-align: center; margin-top: 10px; font-size: 12px; color: #64748b; }
+      .cal-modal {
+        max-width: 340px;
+      }
+      .cal-head {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 12px;
+      }
+      .cal-head .btn {
+        flex: 1;
+      }
+      .cal-nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+      .cal-nav .nav-btn {
+        border: 1px solid #cbd5e1;
+        background: #f8fafc;
+        border-radius: 8px;
+        width: 38px;
+        height: 38px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #334155;
+        line-height: 1;
+      }
+      .cal-nav .nav-btn:active {
+        background: #e2e8f0;
+      }
+      .cal-title {
+        font-weight: 700;
+        font-size: 15px;
+        text-align: center;
+      }
+      .cal-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 2px;
+        text-align: center;
+      }
+      .cal-grid .dow {
+        font-size: 12px;
+        color: #94a3b8;
+        padding: 6px 0;
+        font-weight: 600;
+      }
+      .cal-grid .day {
+        padding: 8px 0;
+        border: none;
+        background: transparent;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-family: inherit;
+        color: #0f172a;
+      }
+      .cal-grid .day:hover {
+        background: #e2e8f0;
+      }
+      .cal-grid .day.disabled {
+        color: #cbd5e1;
+        cursor: not-allowed;
+      }
+      .cal-grid .day.disabled:hover {
+        background: transparent;
+      }
+      .cal-grid .day.today {
+        border: 2px solid #0f766e;
+        color: #0f766e;
+        padding: 6px 0;
+        font-weight: 700;
+      }
+      .cal-grid .day.selected {
+        background: #0f766e;
+        color: #fff;
+        font-weight: 700;
+      }
+      .cal-grid .day.selected.today {
+        border-color: #0f766e;
+      }
+      .cal-hint {
+        text-align: center;
+        margin-top: 10px;
+        font-size: 12px;
+        color: #64748b;
+      }
 
-  .confirm-overlay { position: fixed; inset: 0; background: rgba(15,23,42,.5); display: none; align-items: center; justify-content: center; z-index: 60; padding: 16px; }
-  .confirm-overlay.show { display: flex; }
-  .confirm-box { background: #fff; border-radius: 12px; padding: 20px; max-width: 380px; width: 100%; }
-  .confirm-box h3 { font-size: 16px; margin-bottom: 8px; }
-  .confirm-box p { font-size: 14px; color: #475569; margin-bottom: 16px; }
-  .confirm-box .row { display: flex; gap: 10px; }
-  .confirm-box .row .btn { flex: 1; }
-  .toast {
-    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-    background: #0f172a; color: #fff; padding: 10px 18px; border-radius: 8px;
-    font-size: 14px; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 70;
-  }
-  .toast.show { opacity: 1; }
+      .confirm-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 60;
+        padding: 16px;
+      }
+      .confirm-overlay.show {
+        display: flex;
+      }
+      .confirm-box {
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        max-width: 380px;
+        width: 100%;
+      }
+      .confirm-box h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+      }
+      .confirm-box p {
+        font-size: 14px;
+        color: #475569;
+        margin-bottom: 16px;
+      }
+      .confirm-box .row {
+        display: flex;
+        gap: 10px;
+      }
+      .confirm-box .row .btn {
+        flex: 1;
+      }
+      .toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #0f172a;
+        color: #fff;
+        padding: 10px 18px;
+        border-radius: 8px;
+        font-size: 14px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.25s;
+        z-index: 70;
+      }
+      .toast.show {
+        opacity: 1;
+      }
 
-  @media (max-width: 700px) {
-    body { padding: 10px; }
-    header h1 { font-size: 18px; }
-    .tabs button { padding: 9px 6px; font-size: 13px; }
-    .table-wrap { border: none; background: transparent; overflow: visible; box-shadow: none; }
-    table, thead, tbody, tr, td { display: block; }
-    table { min-width: 0; }
-    thead { display: none; }
-    tbody { display: block; }
-    tr { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
-    tr.row-card { cursor: pointer; }
-    tr.row-card .chev { display: inline-block; margin-inline-start: 6px; color: #94a3b8; font-size: 12px; transition: transform .2s; }
-    tr.row-card.folded .chev { transform: rotate(-90deg); }
-    tr.row-card.folded td:nth-child(n+3) { display: none; }
-    td { display: flex; justify-content: space-between; align-items: center; gap: 10px; border: none; padding: 6px 0; white-space: normal; }
-    td::before { content: attr(data-label); font-weight: 600; color: #64748b; font-size: 12px; flex-shrink: 0; }
-    td:last-child { border-bottom: none; }
-    td.notes-cell { max-width: none; }
-    td.empty-cell { justify-content: center; }
-    td.actions-td { display: block; padding-top: 10px; }
-    td.actions-td::before { display: block; margin-bottom: 6px; }
-    .actions .btn { flex: 1; }
-    .modal { max-width: 100%; border-radius: 16px 16px 0 0; padding-bottom: 24px; }
-    .overlay { padding: 0; align-items: flex-end; }
-    .overlay.cal { align-items: center; padding: 16px; }
-    .cal-modal { max-width: 340px; }
-  }
-</style>
-</head>
-<body>
-<div class="app">
-  <header>
-    <h1>📋 نظام شمس</h1>
-    <div class="stats">
-      <div class="stat">الإجمالي<b id="statTotal">0</b></div>
-      <div class="stat">الحالية<b id="statCurrent">0</b></div>
-      <div class="stat">قادمة<b id="statActive">0</b></div>
-      <div class="stat">المنتهية<b id="statEnded">0</b></div>
+      @media (max-width: 700px) {
+        body {
+          padding: 10px;
+        }
+        header h1 {
+          font-size: 18px;
+        }
+        .tabs button {
+          padding: 9px 6px;
+          font-size: 13px;
+        }
+        .table-wrap {
+          border: none;
+          background: transparent;
+          overflow: visible;
+          box-shadow: none;
+        }
+        table,
+        thead,
+        tbody,
+        tr,
+        td {
+          display: block;
+        }
+        table {
+          min-width: 0;
+        }
+        thead {
+          display: none;
+        }
+        tbody {
+          display: block;
+        }
+        tr {
+          background: #fff;
+          border: 1px solid #e2e8f0;
+          border-radius: 12px;
+          padding: 12px 14px;
+          margin-bottom: 12px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+        tr.row-card {
+          cursor: pointer;
+        }
+        tr.row-card .chev {
+          display: inline-block;
+          margin-inline-start: 6px;
+          color: #94a3b8;
+          font-size: 12px;
+          transition: transform 0.2s;
+        }
+        tr.row-card.folded .chev {
+          transform: rotate(-90deg);
+        }
+        tr.row-card.folded td:nth-child(n + 3) {
+          display: none;
+        }
+        td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 10px;
+          border: none;
+          padding: 6px 0;
+          white-space: normal;
+        }
+        td::before {
+          content: attr(data-label);
+          font-weight: 600;
+          color: #64748b;
+          font-size: 12px;
+          flex-shrink: 0;
+        }
+        td:last-child {
+          border-bottom: none;
+        }
+        td.notes-cell {
+          max-width: none;
+        }
+        td.empty-cell {
+          justify-content: center;
+        }
+        td.actions-td {
+          display: block;
+          padding-top: 10px;
+        }
+        td.actions-td::before {
+          display: block;
+          margin-bottom: 6px;
+        }
+        .actions .btn {
+          flex: 1;
+        }
+        .modal {
+          max-width: 100%;
+          border-radius: 16px 16px 0 0;
+          padding-bottom: 24px;
+        }
+        .overlay {
+          padding: 0;
+          align-items: flex-end;
+        }
+        .overlay.cal {
+          align-items: center;
+          padding: 16px;
+        }
+        .cal-modal {
+          max-width: 340px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <h1>📋 نظام شمس</h1>
+        <div class="stats">
+          <div class="stat">الإجمالي<b id="statTotal">0</b></div>
+          <div class="stat">الحالية<b id="statCurrent">0</b></div>
+          <div class="stat">قادمة<b id="statActive">0</b></div>
+          <div class="stat">المنتهية<b id="statEnded">0</b></div>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <div class="tabs">
+          <button id="tabAll" onclick="setView('all')">الكل</button>
+          <button id="tabCurrent" class="active" onclick="setView('current')">
+            الحالية
+          </button>
+          <button id="tabUpcoming" onclick="setView('upcoming')">قادمة</button>
+          <button id="tabEnding" onclick="setView('ending')">
+            ⏳ قرب الانتهاء
+          </button>
+          <button id="tabEnded" onclick="setView('ended')">المنتهية</button>
+        </div>
+        <div class="controls">
+          <input
+            type="text"
+            id="searchInput"
+            class="search"
+            placeholder="بحث بالاسم / الهاتف / رقم العقد..."
+            oninput="render()"
+          />
+        </div>
+        <div class="controls">
+          <button
+            class="btn btn-outline"
+            id="datePrefBtn"
+            onclick="toggleDatePref()"
+          >
+            عرض بالهجري
+          </button>
+          <button class="btn btn-outline" onclick="exportBackup()">
+            ⬇ نسخة احتياطية
+          </button>
+          <button
+            class="btn btn-outline"
+            onclick="document.getElementById('importFile').click()"
+          >
+            ⬆ استعادة
+          </button>
+          <input
+            type="file"
+            id="importFile"
+            accept=".json,application/json"
+            style="display: none"
+          />
+          <button class="btn btn-primary" onclick="openModal()">
+            ＋ إضافة عقد
+          </button>
+        </div>
+        <span id="storageStatus" style="font-size: 12px; color: #64748b"></span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>الاسم الكامل</th>
+              <th>رقم الهاتف</th>
+              <th>رقم العقد</th>
+              <th>الغرفة</th>
+              <th>السعر</th>
+              <th>البداية</th>
+              <th>النهاية</th>
+              <th>الحالة</th>
+              <th>ملاحظات</th>
+              <th>إجراءات</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
     </div>
-  </header>
 
-  <div class="toolbar">
-    <div class="tabs">
-      <button id="tabAll" onclick="setView('all')">الكل</button>
-      <button id="tabCurrent" class="active" onclick="setView('current')">الحالية</button>
-      <button id="tabUpcoming" onclick="setView('upcoming')">قادمة</button>
-      <button id="tabEnding" onclick="setView('ending')">⏳ قرب الانتهاء</button>
-      <button id="tabEnded" onclick="setView('ended')">المنتهية</button>
-    </div>
-    <div class="controls">
-      <input type="text" id="searchInput" class="search" placeholder="بحث بالاسم / الهاتف / رقم العقد..." oninput="render()">
-    </div>
-    <div class="controls">
-      <button class="btn btn-outline" id="datePrefBtn" onclick="toggleDatePref()">عرض بالهجري</button>
-      <button class="btn btn-outline" onclick="exportBackup()">⬇ نسخة احتياطية</button>
-      <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">⬆ استعادة</button>
-      <input type="file" id="importFile" accept=".json,application/json" style="display:none">
-      <button class="btn btn-primary" onclick="openModal()">＋ إضافة عقد</button>
-    </div>
-    <span id="storageStatus" style="font-size:12px;color:#64748b"></span>
-  </div>
-
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>الاسم الكامل</th>
-          <th>رقم الهاتف</th>
-          <th>رقم العقد</th>
-          <th>الغرفة</th>
-          <th>السعر</th>
-          <th>البداية</th>
-          <th>النهاية</th>
-          <th>الحالة</th>
-          <th>ملاحظات</th>
-          <th>إجراءات</th>
-        </tr>
-      </thead>
-      <tbody id="tableBody"></tbody>
-    </table>
-  </div>
-</div>
-
-<div class="overlay" id="modal">
-  <div class="modal">
-    <h2 id="modalTitle">إضافة عقد جديد</h2>
-    <form id="contractForm" onsubmit="return saveContract(event)">
-      <div class="form-grid">
-        <input type="hidden" id="fId">
-        <div class="field">
-          <label>الاسم الكامل <span class="req">*</span></label>
-          <input type="text" id="fName">
-        </div>
-        <div class="field">
-          <label>رقم الهاتف</label>
-          <input type="tel" id="fPhone" dir="ltr">
-        </div>
-        <div class="field">
-          <label>رقم العقد <span class="req">*</span></label>
-          <input type="text" id="fContractNo">
-        </div>
-        <div class="field">
-          <label>رقم الغرفة (1 - 11) <span class="req">*</span></label>
-          <input type="number" id="fRoom" inputmode="numeric">
-        </div>
-        <div class="field">
-          <label>السعر <span class="req">*</span></label>
-          <input type="number" id="fPrice" inputmode="decimal">
-        </div>
-        <div class="field">
-          <label>بداية العقد <span class="req">*</span></label>
-          <input type="hidden" id="fStart">
-          <input type="text" id="fStartDisplay" class="date-input" readonly placeholder="يوم/شهر/سنة" onclick="openPicker('fStart','fStartDisplay')">
-          <div class="hijri-hint" id="fStartHijri"></div>
-        </div>
-        <div class="field full">
-          <label>طريقة تحديد نهاية العقد</label>
-          <div class="dur-toggle">
-            <button type="button" id="modeManual" class="active" onclick="setEndMode('manual')">يدوي</button>
-            <button type="button" id="modeDays" onclick="setEndMode('days')">بالمدة (أيام)</button>
+    <div class="overlay" id="modal">
+      <div class="modal">
+        <h2 id="modalTitle">إضافة عقد جديد</h2>
+        <form id="contractForm" onsubmit="return saveContract(event);">
+          <div class="form-grid">
+            <input type="hidden" id="fId" />
+            <div class="field">
+              <label>الاسم الكامل <span class="req">*</span></label>
+              <input type="text" id="fName" />
+            </div>
+            <div class="field">
+              <label>رقم الهاتف</label>
+              <input type="tel" id="fPhone" dir="ltr" />
+            </div>
+            <div class="field">
+              <label>رقم العقد <span class="req">*</span></label>
+              <input type="text" id="fContractNo" />
+            </div>
+            <div class="field">
+              <label>رقم الغرفة (1 - 11) <span class="req">*</span></label>
+              <input type="number" id="fRoom" inputmode="numeric" />
+            </div>
+            <div class="field">
+              <label>السعر <span class="req">*</span></label>
+              <input type="number" id="fPrice" inputmode="decimal" />
+            </div>
+            <div class="field">
+              <label>بداية العقد <span class="req">*</span></label>
+              <input type="hidden" id="fStart" />
+              <input
+                type="text"
+                id="fStartDisplay"
+                class="date-input"
+                readonly
+                placeholder="يوم/شهر/سنة"
+                onclick="openPicker('fStart', 'fStartDisplay')"
+              />
+              <div class="hijri-hint" id="fStartHijri"></div>
+            </div>
+            <div class="field full">
+              <label>طريقة تحديد نهاية العقد</label>
+              <div class="dur-toggle">
+                <button
+                  type="button"
+                  id="modeManual"
+                  class="active"
+                  onclick="setEndMode('manual')"
+                >
+                  يدوي
+                </button>
+                <button
+                  type="button"
+                  id="modeDays"
+                  onclick="setEndMode('days')"
+                >
+                  بالمدة (أيام)
+                </button>
+              </div>
+            </div>
+            <div class="field" id="fEndField">
+              <label>نهاية العقد <span class="req">*</span></label>
+              <input type="hidden" id="fEnd" />
+              <input
+                type="text"
+                id="fEndDisplay"
+                class="date-input"
+                readonly
+                placeholder="يوم/شهر/سنة"
+                onclick="openPicker('fEnd', 'fEndDisplay')"
+              />
+              <div class="hijri-hint" id="fEndHijri"></div>
+            </div>
+            <div class="field full" id="durPresets" style="display: none">
+              <label>اختر المدة</label>
+              <div class="dur-presets">
+                <button
+                  type="button"
+                  class="dur-preset"
+                  data-days="7"
+                  onclick="setDays(this)"
+                >
+                  7 أيام
+                </button>
+                <button
+                  type="button"
+                  class="dur-preset"
+                  data-days="30"
+                  onclick="setDays(this)"
+                >
+                  30 يوم
+                </button>
+                <button
+                  type="button"
+                  class="dur-preset"
+                  data-days="90"
+                  onclick="setDays(this)"
+                >
+                  90 يوم (3 أشهر)
+                </button>
+                <button
+                  type="button"
+                  class="dur-preset"
+                  data-days="180"
+                  onclick="setDays(this)"
+                >
+                  180 يوم (6 أشهر)
+                </button>
+                <button
+                  type="button"
+                  class="dur-preset"
+                  data-days="365"
+                  onclick="setDays(this)"
+                >
+                  365 يوم (سنة)
+                </button>
+              </div>
+              <div class="hijri-hint">تُحسب نهاية العقد تلقائيًا</div>
+            </div>
+            <div class="field full">
+              <label>ملاحظات</label>
+              <textarea id="fNotes"></textarea>
+            </div>
           </div>
-        </div>
-        <div class="field" id="fEndField">
-          <label>نهاية العقد <span class="req">*</span></label>
-          <input type="hidden" id="fEnd">
-          <input type="text" id="fEndDisplay" class="date-input" readonly placeholder="يوم/شهر/سنة" onclick="openPicker('fEnd','fEndDisplay')">
-          <div class="hijri-hint" id="fEndHijri"></div>
-        </div>
-        <div class="field full" id="durPresets" style="display:none">
-          <label>اختر المدة</label>
-          <div class="dur-presets">
-            <button type="button" class="dur-preset" data-days="7" onclick="setDays(this)">7 أيام</button>
-            <button type="button" class="dur-preset" data-days="30" onclick="setDays(this)">30 يوم</button>
-            <button type="button" class="dur-preset" data-days="90" onclick="setDays(this)">90 يوم (3 أشهر)</button>
-            <button type="button" class="dur-preset" data-days="180" onclick="setDays(this)">180 يوم (6 أشهر)</button>
-            <button type="button" class="dur-preset" data-days="365" onclick="setDays(this)">365 يوم (سنة)</button>
+          <div class="error" id="formError"></div>
+          <div class="modal-actions">
+            <button
+              type="button"
+              class="btn btn-outline"
+              onclick="closeModal()"
+            >
+              إلغاء
+            </button>
+            <button type="submit" class="btn btn-primary">حفظ</button>
           </div>
-          <div class="hijri-hint">تُحسب نهاية العقد تلقائيًا</div>
+        </form>
+      </div>
+    </div>
+
+    <div class="overlay cal" id="pickerModal">
+      <div class="modal cal-modal">
+        <div class="cal-head">
+          <button
+            type="button"
+            class="btn btn-sm btn-outline"
+            id="calToggle"
+            onclick="calToggle()"
+          >
+            تحويل إلى هجري
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline"
+            onclick="calToday()"
+          >
+            اليوم
+          </button>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline"
+            onclick="closePicker()"
+          >
+            ✕
+          </button>
         </div>
-        <div class="field full">
-          <label>ملاحظات</label>
-          <textarea id="fNotes"></textarea>
+        <div class="cal-nav">
+          <button
+            type="button"
+            class="nav-btn"
+            id="calPrev"
+            onclick="calNav(-1)"
+          >
+            ‹
+          </button>
+          <div class="cal-title" id="calTitle"></div>
+          <button
+            type="button"
+            class="nav-btn"
+            id="calNext"
+            onclick="calNav(1)"
+          >
+            ›
+          </button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div class="cal-hint" id="calHint"></div>
+      </div>
+    </div>
+
+    <div class="confirm-overlay" id="confirmOverlay">
+      <div class="confirm-box">
+        <h3>تأكيد الحذف</h3>
+        <p id="confirmText"></p>
+        <div class="row">
+          <button class="btn btn-outline" onclick="closeConfirm()">
+            إلغاء
+          </button>
+          <button class="btn btn-danger" id="confirmDeleteBtn">حذف</button>
         </div>
       </div>
-      <div class="error" id="formError"></div>
-      <div class="modal-actions">
-        <button type="button" class="btn btn-outline" onclick="closeModal()">إلغاء</button>
-        <button type="submit" class="btn btn-primary">حفظ</button>
+    </div>
+
+    <div class="confirm-overlay" id="endOverlay">
+      <div class="confirm-box">
+        <h3>تأكيد إنهاء العقد</h3>
+        <p id="endConfirmText"></p>
+        <div class="row">
+          <button class="btn btn-outline" onclick="closeEndConfirm()">
+            إلغاء
+          </button>
+          <button class="btn btn-danger" id="confirmEndBtn">إنهاء العقد</button>
+        </div>
       </div>
-    </form>
-  </div>
-</div>
-
-<div class="overlay cal" id="pickerModal">
-  <div class="modal cal-modal">
-    <div class="cal-head">
-      <button type="button" class="btn btn-sm btn-outline" id="calToggle" onclick="calToggle()">تحويل إلى هجري</button>
-      <button type="button" class="btn btn-sm btn-outline" onclick="calToday()">اليوم</button>
-      <button type="button" class="btn btn-sm btn-outline" onclick="closePicker()">✕</button>
     </div>
-    <div class="cal-nav">
-      <button type="button" class="nav-btn" id="calPrev" onclick="calNav(-1)">‹</button>
-      <div class="cal-title" id="calTitle"></div>
-      <button type="button" class="nav-btn" id="calNext" onclick="calNav(1)">›</button>
-    </div>
-    <div class="cal-grid" id="calGrid"></div>
-    <div class="cal-hint" id="calHint"></div>
-  </div>
-</div>
-
-<div class="confirm-overlay" id="confirmOverlay">
-  <div class="confirm-box">
-    <h3>تأكيد الحذف</h3>
-    <p id="confirmText"></p>
-    <div class="row">
-      <button class="btn btn-outline" onclick="closeConfirm()">إلغاء</button>
-      <button class="btn btn-danger" id="confirmDeleteBtn">حذف</button>
-    </div>
-  </div>
-</div>
-
-<div class="confirm-overlay" id="endOverlay">
-  <div class="confirm-box">
-    <h3>تأكيد إنهاء العقد</h3>
-    <p id="endConfirmText"></p>
-    <div class="row">
-      <button class="btn btn-outline" onclick="closeEndConfirm()">إلغاء</button>
-      <button class="btn btn-danger" id="confirmEndBtn">إنهاء العقد</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script>
-(function () {
-  const STORAGE_KEY = 'shams_contracts_v1';
-  const CAL_MODE_KEY = STORAGE_KEY + '_cal';
-  const STATE_FILE = 'shams_contracts_v1.json';
-  const ENDING_SOON_DAYS = 30;
-
-  const gregMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
-  const hijriMonths = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
-  const weekLabels = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
-
-  let contracts = [];
-  let idCounter = 1;
-  let view = 'current';
-  let pendingDeleteId = null;
-  let pendingEndId = null;
-  let endMode = 'manual';
-  let selectedDays = null;
-  let datePref = 'gregorian';
-  let storageMode = '';
-
-  /* ---------------- JSON-file storage (Origin Private File System) ---------------- */
-
-  function supportsOPFS() {
-    try { return !!(navigator.storage && navigator.storage.getDirectory); } catch (e) { return false; }
-  }
-
-  async function persistRaw(obj) {
-    const json = JSON.stringify(obj);
-    if (supportsOPFS()) {
-      try {
-        const root = await navigator.storage.getDirectory();
-        const fh = await root.getFileHandle(STATE_FILE, { create: true });
-        const w = await fh.createWritable();
-        await w.write(json);
-        await w.close();
-        return 'opfs';
-      } catch (e) {}
-    }
-    try {
-      localStorage.setItem(STORAGE_KEY, json);
-      return 'local';
-    } catch (e) { return null; }
-  }
-
-  async function loadRaw() {
-    if (supportsOPFS()) {
-      try {
-        const root = await navigator.storage.getDirectory();
-        const fh = await root.getFileHandle(STATE_FILE);
-        const file = await fh.getFile();
-        const txt = await file.text();
-        if (txt) return txt;
-      } catch (e) {}
-    }
-    try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
-  }
-
-  function parseState(raw) {
-    try {
-      const obj = JSON.parse(raw);
-      if (Array.isArray(obj)) {
-        return {
-          legacy: true,
-          contracts: obj,
-          nextId: obj.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1,
-          datePref: 'gregorian',
-          calMode: 'gregorian'
-        };
-      }
-      const list = Array.isArray(obj.contracts) ? obj.contracts : [];
-      const maxId = list.reduce((m, c) => Math.max(m, c.id || 0), 0);
-      return {
-        contracts: list,
-        nextId: obj.nextId > 0 ? obj.nextId : maxId + 1,
-        datePref: obj.datePref || 'gregorian',
-        calMode: obj.calMode || 'gregorian'
-      };
-    } catch (e) { return null; }
-  }
-
-  function buildStateObject() {
-    return { version: 1, nextId: idCounter, datePref: datePref, calMode: pickerMode, contracts: contracts };
-  }
-
-  let _saveChain = Promise.resolve();
-
-  function save() {
-    const obj = buildStateObject();
-    _saveChain = _saveChain
-      .then(() => persistRaw(obj))
-      .then(m => { storageMode = m || 'خطأ'; updateStorageStatus(); })
-      .catch(() => { storageMode = 'خطأ'; updateStorageStatus(); });
-    return _saveChain;
-  }
-
-  function updateStorageStatus() {
-    const el = document.getElementById('storageStatus');
-    if (el) {
-      el.textContent = storageMode === 'opfs'
-        ? '💾 يُحفظ تلقائيًا في ملف contracts.json'
-        : storageMode === 'local'
-          ? 'يُحفظ في مخزن المتصفح (وضع احتياطي)'
-          : '';
-    }
-  }
-
-  function nextId() {
-    const max = contracts.reduce((m, c) => Math.max(m, c.id || 0), 0);
-    let id = Math.max(idCounter, max + 1);
-    idCounter = id + 1;
-    return id;
-  }
-
-  async function init() {
-    const raw = await loadRaw();
-    const st = raw ? parseState(raw) : null;
-    if (st) {
-      contracts = st.contracts;
-      idCounter = st.nextId;
-      datePref = st.datePref;
-      pickerMode = st.calMode;
-      if (st.legacy) {
-        try {
-          datePref = localStorage.getItem(STORAGE_KEY + '_datepref') || datePref;
-          pickerMode = localStorage.getItem(CAL_MODE_KEY) || pickerMode;
-          const n = parseInt(localStorage.getItem(STORAGE_KEY + '_nextid'), 10);
-          if (!isNaN(n) && n > idCounter) idCounter = n;
-        } catch (e) {}
-      }
-    } else {
-      try {
-        datePref = localStorage.getItem(STORAGE_KEY + '_datepref') || 'gregorian';
-        pickerMode = localStorage.getItem(CAL_MODE_KEY) || 'gregorian';
-      } catch (e) {}
-    }
-    render();
-    save();
-  }
-
-  function pad2(n) { return String(n).padStart(2, '0'); }
-
-  function todayYMD() {
-    const d = new Date();
-    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
-  }
-
-  function ymdFromUTC(y, m, d) {
-    return y + '-' + pad2(m) + '-' + pad2(d);
-  }
-
-  function daysUntil(ymd) {
-    const d = new Date(ymd + 'T00:00:00Z');
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-    const todayUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
-    return Math.round((Date.parse(ymd + 'T00:00:00Z') - todayUTC) / 86400000);
-  }
-
-  function computeStatus(c) {
-    if (c.status === 'ended') return 'ended';
-    if (c.end && c.end < todayYMD()) return 'ended';
-    if (c.start && c.start > todayYMD()) return 'active';
-    return 'current';
-  }
-
-  function isEndingSoon(c) {
-    if (computeStatus(c) !== 'current') return false;
-    const d = daysUntil(c.end);
-    return d >= 0 && d <= ENDING_SOON_DAYS;
-  }
-
-  function syncStatuses() {
-    let changed = false;
-    contracts.forEach(c => {
-      const s = computeStatus(c);
-      if (s !== c.status) { c.status = s; changed = true; }
-    });
-    if (changed) save();
-  }
-
-  function esc(str) {
-    return String(str == null ? '' : str)
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
-  }
-
-  function formatDate(ymd) {
-    if (!ymd) return '—';
-    const p = ymd.split('-');
-    if (p.length !== 3) return ymd;
-    return p[2] + '/' + p[1] + '/' + p[0];
-  }
-
-  function formatPrice(n) {
-    return (n == null || n === '') ? '—' : Number(n).toLocaleString('ar-SA') + ' ر.س';
-  }
-
-  /* ---------------- Hijri / Gregorian conversion (Umm al-Qura) ---------------- */
-
-  function arNum(str) {
-    return String(str == null ? '' : str)
-      .replace(/[٠-٩]/g, function (d) { return '٠١٢٣٤٥٦٧٨٩'.indexOf(d); })
-      .replace(/[۰-۹]/g, function (d) { return '۰۱۲۳۴۵۶۷۸۹'.indexOf(d); });
-  }
-
-  function buildFormatter(locale) {
-    const keys = ['islamic-umalqura', 'islamic-civil', 'islamic'];
-    for (const k of keys) {
-      try {
-        const f = new Intl.DateTimeFormat(locale + '-u-ca-' + k, { year: 'numeric', month: 'numeric', day: 'numeric', timeZone: 'UTC' });
-        const p = f.formatToParts(new Date('2024-03-11T00:00:00Z'));
-        const y = parseInt(arNum((p.find(x => x.type === 'year') || {}).value), 10);
-        if (y >= 1300 && y <= 1600) return f;
-      } catch (e) {}
-    }
-    return null;
-  }
-
-  const islamicEn = buildFormatter('en-US');
-  const islamicAr = buildFormatter('ar-SA');
-  const HIJRI_OK = !!islamicEn && !!islamicAr;
-
-  function toHijri(ymd) {
-    const parts = islamicEn.formatToParts(new Date(ymd + 'T00:00:00Z'));
-    let year = 0, month = 0, day = 0;
-    parts.forEach(p => {
-      if (p.type === 'year') year = parseInt(arNum(p.value), 10);
-      if (p.type === 'month') month = parseInt(arNum(p.value), 10);
-      if (p.type === 'day') day = parseInt(arNum(p.value), 10);
-    });
-    return { year, month, day };
-  }
-
-  function hijriRank(hy, hm, hd) {
-    return hy * 372 + (hm - 1) * 31 + (hd - 1);
-  }
-
-  function normMonth(y, m) {
-    while (m > 12) { m -= 12; y++; }
-    while (m < 1) { m += 12; y--; }
-    return { year: y, month: m };
-  }
-
-  function fromHijri(hy, hm, hd) {
-    const target = hijriRank(hy, hm, hd);
-    let lo = Date.UTC(622, 6, 19) + (hy - 1) * 354.367 * 86400000 - 366 * 86400000;
-    let hi = lo + 800 * 86400000;
-    while (lo < hi) {
-      const mid = Math.floor((lo + hi) / 2);
-      const d = new Date(mid);
-      const ymd = ymdFromUTC(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
-      const h = toHijri(ymd);
-      if (hijriRank(h.year, h.month, h.day) < target) lo = mid + 86400000;
-      else hi = mid;
-    }
-    const d = new Date(lo);
-    return ymdFromUTC(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
-  }
-
-  function daysInHijriMonth(hy, hm) {
-    const a = normMonth(hy, hm);
-    const b = normMonth(hy, hm + 1);
-    const d1 = Date.parse(fromHijri(a.year, a.month, 1) + 'T00:00:00Z');
-    const d2 = Date.parse(fromHijri(b.year, b.month, 1) + 'T00:00:00Z');
-    return Math.round((d2 - d1) / 86400000);
-  }
-
-  function addMonthsYMD(ymd, delta) {
-    const [y, m] = ymd.split('-').map(Number);
-    const d = new Date(Date.UTC(y, m - 1 + delta, 1));
-    return ymdFromUTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1);
-  }
-
-  function addDaysYMD(ymd, days) {
-    const d = new Date(Date.parse(ymd + 'T00:00:00Z'));
-    d.setUTCDate(d.getUTCDate() + days);
-    return ymdFromUTC(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
-  }
-
-  function applyDurationToEnd() {
-    const start = document.getElementById('fStart').value;
-    if (!start || !selectedDays) return;
-    renderDateField('fEnd', 'fEndDisplay', addDaysYMD(start, selectedDays));
-  }
-
-  function setEndMode(mode) {
-    endMode = mode;
-    updateEndModeUI();
-    if (mode === 'days') applyDurationToEnd();
-  }
-
-  function setDays(btn) {
-    selectedDays = parseInt(btn.dataset.days, 10);
-    updateEndModeUI();
-    applyDurationToEnd();
-  }
-
-  function updateEndModeUI() {
-    document.getElementById('modeManual').classList.toggle('active', endMode === 'manual');
-    document.getElementById('modeDays').classList.toggle('active', endMode === 'days');
-    document.getElementById('fEndField').style.display = endMode === 'manual' ? '' : 'none';
-    document.getElementById('durPresets').style.display = endMode === 'days' ? '' : 'none';
-    document.querySelectorAll('#durPresets .dur-preset').forEach(b =>
-      b.classList.toggle('active', b.dataset.days == selectedDays));
-  }
-
-  function daysInGregMonth(ymd) {
-    const d1 = Date.parse(ymd + 'T00:00:00Z');
-    const d2 = Date.parse(addMonthsYMD(ymd, 1) + 'T00:00:00Z');
-    return Math.round((d2 - d1) / 86400000);
-  }
-
-  function gregToHijriStr(ymd) {
-    if (!ymd || !HIJRI_OK) return '';
-    try { return islamicAr.format(new Date(ymd + 'T00:00:00Z')); } catch (e) { return ''; }
-  }
-
-  /* ---------------- Custom date picker ---------------- */
-
-  let pickerField = null;
-  let pickerDisplay = null;
-  let pickerMode = 'gregorian';
-  let cur = todayYMD();
-
-  function openPicker(fieldId, displayId) {
-    pickerField = fieldId;
-    pickerDisplay = displayId;
-    const val = document.getElementById(fieldId).value;
-    cur = val || todayYMD();
-    document.getElementById('calToggle').style.display = HIJRI_OK ? '' : 'none';
-    renderCal();
-    document.getElementById('pickerModal').classList.add('show');
-  }
-
-  function closePicker() {
-    document.getElementById('pickerModal').classList.remove('show');
-  }
-
-  function calToggle() {
-    if (!HIJRI_OK) return;
-    pickerMode = pickerMode === 'gregorian' ? 'hijri' : 'gregorian';
-    save();
-    renderCal();
-  }
-
-  function calToday() {
-    cur = todayYMD();
-    renderCal();
-  }
-
-  function calNav(dir) {
-    if (pickerMode === 'gregorian') {
-      cur = addMonthsYMD(cur, dir);
-    } else {
-      const h = toHijri(cur);
-      const t = normMonth(h.year, h.month + dir);
-      cur = fromHijri(t.year, t.month, 1);
-    }
-    renderCal();
-  }
-
-  function pickDate(ymd) {
-    if (dayDisabled(ymd)) return;
-    document.getElementById(pickerField).value = ymd;
-    renderDateField(pickerField, pickerDisplay, ymd);
-    if (pickerField === 'fStart' && endMode === 'days') applyDurationToEnd();
-    closePicker();
-  }
-
-  function dayDisabled(ymd) {
-    if (endMode === 'days') return false;
-    if (pickerField === 'fStart') {
-      const max = document.getElementById('fEnd').value;
-      return max ? ymd > max : false;
-    }
-    if (pickerField === 'fEnd') {
-      const min = document.getElementById('fStart').value;
-      return min ? ymd < min : false;
-    }
-    return false;
-  }
-
-  function renderCal() {
-    const grid = document.getElementById('calGrid');
-    const title = document.getElementById('calTitle');
-    const toggle = document.getElementById('calToggle');
-    const mode = pickerMode;
-    toggle.textContent = mode === 'gregorian' ? 'تحويل إلى هجري' : 'تحويل إلى ميلادي';
-
-    const selYMD = document.getElementById(pickerField).value;
-    const tYMD = todayYMD();
-    let startIdx, daysIn, cells = '';
-
-    if (mode === 'gregorian') {
-      const [y, m] = cur.split('-').map(Number);
-      const ym1 = y + '-' + pad2(m) + '-01';
-      startIdx = new Date(ym1 + 'T00:00:00Z').getUTCDay();
-      daysIn = daysInGregMonth(ym1);
-      title.textContent = gregMonths[m - 1] + ' ' + y;
-      for (let i = 1; i <= daysIn; i++) {
-        const ymd = ymdFromUTC(y, m, i);
-        cells += dayCell(i, ymd, ymd === selYMD, ymd === tYMD);
-      }
-    } else {
-      const h = toHijri(cur);
-      daysIn = daysInHijriMonth(h.year, h.month);
-      const d1 = fromHijri(h.year, h.month, 1);
-      startIdx = new Date(d1 + 'T00:00:00Z').getUTCDay();
-      title.textContent = hijriMonths[h.month - 1] + ' ' + h.year + ' هـ';
-      const tH = toHijri(tYMD);
-      for (let i = 1; i <= daysIn; i++) {
-        const ymd = fromHijri(h.year, h.month, i);
-        const isToday = (h.year === tH.year && h.month === tH.month && i === tH.day);
-        cells += dayCell(i, ymd, ymd === selYMD, isToday);
-      }
-    }
-
-    let html = weekLabels.map(l => '<div class="dow">' + l + '</div>').join('');
-    for (let i = 0; i < startIdx; i++) html += '<div></div>';
-    html += cells;
-    grid.innerHTML = html;
-
-    let hint = HIJRI_OK
-      ? (mode === 'gregorian' ? 'اختر تاريخًا بالتقويم الميلادي' : 'اختر تاريخًا بالهجري وسيُحوَّل تلقائيًا')
-      : 'اختر تاريخًا بالتقويم الميلادي';
-    if (pickerField === 'fStart') hint += ' — لا يمكن أن يتجاوز تاريخ نهاية العقد';
-    if (pickerField === 'fEnd') hint += ' — لا يمكن أن يسبق تاريخ بداية العقد';
-    document.getElementById('calHint').textContent = hint;
-  }
-
-  function dayCell(label, ymd, selected, isToday) {
-    let cls = 'day';
-    if (isToday && !selected) cls += ' today';
-    if (selected) cls += ' selected';
-    const dis = dayDisabled(ymd);
-    if (dis) cls += ' disabled';
-    return '<button type="button" class="' + cls + '"' + (dis ? '' : ' onclick="pickDate(\'' + ymd + '\')"') + '>' + label + '</button>';
-  }
-
-  /* ---------------- Views ---------------- */
-
-  function setView(v) {
-    view = v;
-    document.getElementById('tabCurrent').classList.toggle('active', v === 'current');
-    document.getElementById('tabUpcoming').classList.toggle('active', v === 'upcoming');
-    document.getElementById('tabEnding').classList.toggle('active', v === 'ending');
-    document.getElementById('tabEnded').classList.toggle('active', v === 'ended');
-    document.getElementById('tabAll').classList.toggle('active', v === 'all');
-    render();
-  }
-
-  function isMobile() {
-    return window.matchMedia('(max-width: 700px)').matches;
-  }
-
-  function toggleCard(tr, e) {
-    if (!isMobile()) return;
-    if (e && e.target.closest('button, a, input, select, textarea')) return;
-    tr.classList.toggle('folded');
-  }
-
-  function visibleContracts() {
-    const q = document.getElementById('searchInput').value.trim().toLowerCase();
-    return contracts.filter(c => {
-      const status = computeStatus(c);
-      if (view === 'current' && status !== 'current') return false;
-      if (view === 'upcoming' && status !== 'active') return false;
-      if (view === 'ending' && !isEndingSoon(c)) return false;
-      if (view === 'ended' && status !== 'ended') return false;
-      if (q) {
-        const hay = (c.name + ' ' + c.phone + ' ' + c.contractNo + ' ' + (c.notes || '')).toLowerCase();
-        if (!hay.includes(q)) return false;
-      }
-      return true;
-    });
-  }
-
-  function dateCell(ymd, label, cls) {
-    const greg = formatDate(ymd);
-    const hijri = HIJRI_OK ? gregToHijriStr(ymd) : '';
-    const useHijri = datePref === 'hijri' && !!hijri;
-    return '<td data-label="' + label + '"' + (cls ? ' class="' + cls + '"' : '') + '>'
-      + (useHijri ? hijri : greg)
-      + '<div class="hijri-sub">' + (useHijri ? greg : hijri) + '</div>'
-      + '</td>';
-  }
-
-  function render() {
-    syncStatuses();
-    updateDatePrefBtn();
-    const list = visibleContracts();
-    const tbody = document.getElementById('tableBody');
-
-    const currentCount = contracts.filter(c => computeStatus(c) === 'current').length;
-    const activeCount = contracts.filter(c => computeStatus(c) === 'active').length;
-    const endedCount = contracts.filter(c => computeStatus(c) === 'ended').length;
-    const endingCount = contracts.filter(isEndingSoon).length;
-
-    document.getElementById('statTotal').textContent = contracts.length;
-    document.getElementById('statCurrent').textContent = currentCount;
-    document.getElementById('statActive').textContent = activeCount;
-    document.getElementById('statEnded').textContent = endedCount;
-    document.getElementById('tabEnding').innerHTML = 'قرب الانتهاء <span class="cnt">(' + endingCount + ')</span>';
-
-    if (!list.length) {
-      const q = document.getElementById('searchInput').value.trim();
-      const msg = q
-        ? 'لا توجد نتائج مطابقة للبحث'
-        : ({ current: 'لا توجد عقود حالية', upcoming: 'لا توجد عقود قادمة', ending: 'لا توجد عقود على وشك الانتهاء', ended: 'لا توجد عقود منتهية', all: 'لا توجد عقود' })[view] || 'لا توجد عقود';
-      tbody.innerHTML = '<tr><td colspan="11" class="empty-cell"><div class="empty">' + msg + '</div></td></tr>';
-      return;
-    }
-
-    list.sort((a, b) => {
-      const sa = computeStatus(a), sb = computeStatus(b);
-      if (view === 'all' && sa !== sb) return { current: 0, active: 1, ended: 2 }[sa] - { current: 0, active: 1, ended: 2 }[sb];
-      if (view === 'ending') return daysUntil(a.end) - daysUntil(b.end);
-      return b.id - a.id;
-    });
-
-    tbody.innerHTML = list.map(c => {
-      const status = computeStatus(c);
-      const soon = isEndingSoon(c);
-      let badge = '<span class="badge badge-active">قادم</span>';
-      if (status === 'current') {
-        badge = soon
-          ? '<span class="badge badge-soon">ينتهي قريبًا</span>'
-          : '<span class="badge badge-current">نشط</span>';
-      } else if (status === 'ended') {
-        badge = '<span class="badge badge-ended">منتهي</span>';
-      }
-      const endCls = status === 'current' && soon ? 'soon' : '';
-      const endBtn = status === 'current'
-        ? '<button class="btn btn-sm btn-danger" onclick="askEnd(' + c.id + ')">إنهاء</button>'
-        : '';
-      return '<tr class="row-card' + (isMobile() ? ' folded' : '') + '" onclick="toggleCard(this, event)">'
-        + '<td data-label="#">' + c.id + '</td>'
-        + '<td data-label="الاسم الكامل"><b>' + esc(c.name) + '</b><span class="chev">▾</span></td>'
-        + '<td data-label="رقم الهاتف" dir="ltr" style="text-align:right">' + (esc(c.phone) || '—') + '</td>'
-        + '<td data-label="رقم العقد">' + esc(c.contractNo) + '</td>'
-        + '<td data-label="الغرفة">' + c.room + '</td>'
-        + '<td data-label="السعر">' + formatPrice(c.price) + '</td>'
-        + dateCell(c.start, 'البداية', '')
-        + dateCell(c.end, 'النهاية', endCls)
-        + '<td data-label="الحالة">' + badge + '</td>'
-        + '<td data-label="ملاحظات" class="notes-cell">' + (esc(c.notes) || '—') + '</td>'
-        + '<td data-label="إجراءات" class="actions-td"><div class="actions">' + endBtn
-          + '<button class="btn btn-sm btn-success" onclick="openModal(' + c.id + ')">تعديل</button>'
-          + '<button class="btn btn-sm btn-danger" onclick="askDelete(' + c.id + ')">حذف</button>'
-        + '</div></td>'
-        + '</tr>';
-    }).join('');
-  }
-
-  /* ---------------- Form ---------------- */
-
-  function renderDateField(fieldId, displayId, ymd) {
-    const hidden = document.getElementById(fieldId);
-    const input = document.getElementById(displayId);
-    const hint = document.getElementById(fieldId + 'Hijri');
-    hidden.value = ymd || '';
-    if (!ymd) {
-      input.value = '';
-      if (hint) hint.textContent = '';
-      return;
-    }
-    const greg = formatDate(ymd);
-    const hijri = HIJRI_OK ? gregToHijriStr(ymd) : '';
-    if (datePref === 'hijri' && hijri) {
-      input.value = hijri;
-      if (hint) hint.textContent = greg;
-    } else {
-      input.value = greg;
-      if (hint) hint.textContent = hijri;
-    }
-  }
-
-  function toggleDatePref() {
-    datePref = datePref === 'hijri' ? 'gregorian' : 'hijri';
-    save();
-    updateDatePrefBtn();
-    render();
-    renderDateField('fStart', 'fStartDisplay', document.getElementById('fStart').value);
-    renderDateField('fEnd', 'fEndDisplay', document.getElementById('fEnd').value);
-  }
-
-  function updateDatePrefBtn() {
-    const b = document.getElementById('datePrefBtn');
-    if (b) b.textContent = datePref === 'hijri' ? 'عرض بالميلادي' : 'عرض بالهجري';
-  }
-
-  function openModal(id) {
-    const c = id ? contracts.find(x => x.id === id) : null;
-    document.getElementById('modalTitle').textContent = c ? 'تعديل العقد #' + c.id : 'إضافة عقد جديد';
-    document.getElementById('formError').textContent = '';
-    document.getElementById('fId').value = c ? c.id : '';
-    document.getElementById('fName').value = c ? c.name : '';
-    document.getElementById('fPhone').value = c ? (c.phone || '') : '';
-    document.getElementById('fContractNo').value = c ? c.contractNo : '';
-    document.getElementById('fRoom').value = c ? c.room : '';
-    document.getElementById('fPrice').value = c ? c.price : '';
-    renderDateField('fStart', 'fStartDisplay', c ? c.start : '');
-    renderDateField('fEnd', 'fEndDisplay', c ? c.end : '');
-    endMode = 'manual';
-    selectedDays = null;
-    updateEndModeUI();
-    document.getElementById('fNotes').value = c ? (c.notes || '') : '';
-    document.getElementById('modal').classList.add('show');
-    const scrollEl = document.querySelector('#modal .modal');
-    if (scrollEl) scrollEl.scrollTop = 0;
-  }
-
-  function closeModal() {
-    document.getElementById('modal').classList.remove('show');
-    document.getElementById('formError').textContent = '';
-  }
-
-  function saveContract(e) {
-    e.preventDefault();
-    const errorEl = document.getElementById('formError');
-    errorEl.textContent = '';
-
-    const id = document.getElementById('fId').value;
-    const name = document.getElementById('fName').value.trim();
-    const phone = document.getElementById('fPhone').value.trim();
-    const contractNo = document.getElementById('fContractNo').value.trim();
-    const room = parseInt(document.getElementById('fRoom').value, 10);
-    const price = parseFloat(document.getElementById('fPrice').value);
-    const start = document.getElementById('fStart').value;
-    const end = document.getElementById('fEnd').value;
-    const notes = document.getElementById('fNotes').value.trim();
-
-    if (!name) { errorEl.textContent = 'برجاء إدخال الاسم الكامل.'; return false; }
-    if (!contractNo) { errorEl.textContent = 'برجاء إدخال رقم العقد.'; return false; }
-    if (isNaN(room) || room < 1 || room > 11) { errorEl.textContent = 'رقم الغرفة يجب أن يكون بين 1 و 11.'; return false; }
-    if (isNaN(price) || price < 0) { errorEl.textContent = 'برجاء إدخال سعر صحيح.'; return false; }
-    if (!start || !end) { errorEl.textContent = 'برجاء تحديد تاريخ البداية والنهاية.'; return false; }
-    if (end < start) { errorEl.textContent = 'تاريخ نهاية العقد يجب أن يكون بعد تاريخ البداية.'; return false; }
-
-    const roomTaken = contracts.some(c => c.room === room && String(c.id) !== id);
-    if (roomTaken) { errorEl.textContent = 'الغرفة رقم ' + room + ' مشغولة بالفعل بعقد آخر.'; return false; }
-
-    const existing = id ? contracts.find(x => x.id === Number(id)) : null;
-
-    if (existing) {
-      existing.name = name;
-      existing.phone = phone;
-      existing.contractNo = contractNo;
-      existing.room = room;
-      existing.price = price;
-      existing.start = start;
-      existing.end = end;
-      existing.notes = notes;
-      existing.status = computeStatus(existing);
-    } else {
-      const nc = {
-        id: nextId(),
-        name, phone, contractNo, room, price, start, end, notes,
-        status: 'current',
-        createdAt: new Date().toISOString()
-      };
-      nc.status = computeStatus(nc);
-      contracts.push(nc);
-    }
-
-    save();
-    closeModal();
-    render();
-    toast(id ? 'تم تعديل العقد بنجاح' : 'تم إضافة العقد بنجاح');
-    if (!id) window.scrollTo({ top: 0, behavior: 'smooth' });
-    return false;
-  }
-
-  function nowStamp() {
-    const d = new Date();
-    const p = n => String(n).padStart(2, '0');
-    return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate())
-      + ' ' + p(d.getHours()) + ':' + p(d.getMinutes());
-  }
-
-  function askEnd(id) {
-    const c = contracts.find(x => x.id === id);
-    if (!c) return;
-    pendingEndId = id;
-    document.getElementById('endConfirmText').textContent = 'هل أنت متأكد من إنهاء عقد رقم ' + c.id + ' — ' + c.name + '؟ ستُضاف ملاحظة بتاريخ الإنهاء إلى العقد.';
-    document.getElementById('endOverlay').classList.add('show');
-  }
-
-  function doEnd() {
-    if (pendingEndId == null) return;
-    const c = contracts.find(x => x.id === pendingEndId);
-    if (c) {
-      c.status = 'ended';
-      c.notes = (c.notes ? c.notes + '\n' : '') + 'تم إنهاء العقد يدويا في ' + nowStamp();
-    }
-    pendingEndId = null;
-    save();
-    closeEndConfirm();
-    render();
-    toast('تم إنهاء العقد');
-  }
-
-  function closeEndConfirm() {
-    pendingEndId = null;
-    document.getElementById('endOverlay').classList.remove('show');
-  }
-
-  function askDelete(id) {
-    const c = contracts.find(x => x.id === id);
-    if (!c) return;
-    pendingDeleteId = id;
-    document.getElementById('confirmText').textContent = 'هل أنت متأكد من حذف عقد رقم ' + c.id + ' — ' + c.name + '؟ لا يمكن التراجع عن هذا الإجراء.';
-    document.getElementById('confirmOverlay').classList.add('show');
-  }
-
-  function doDelete() {
-    if (pendingDeleteId == null) return;
-    contracts = contracts.filter(x => x.id !== pendingDeleteId);
-    pendingDeleteId = null;
-    save();
-    closeConfirm();
-    render();
-    toast('تم حذف العقد');
-  }
-
-  function closeConfirm() {
-    pendingDeleteId = null;
-    document.getElementById('confirmOverlay').classList.remove('show');
-  }
-
-  function exportBackup() {
-    const obj = buildStateObject();
-    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'shams_backup_' + todayYMD() + '.json';
-    document.body.appendChild(a);
-    a.click();
-    setTimeout(function () {
-      document.body.removeChild(a);
-      URL.revokeObjectURL(a.href);
-    }, 100);
-    toast('تم إنشاء النسخة الاحتياطية');
-  }
-
-  function importBackupFile(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = function (e) {
-      const st = parseState(e.target.result);
-      if (!st) { toast('ملف غير صالح — لم يتم الاستعادة'); return; }
-      contracts = st.contracts;
-      idCounter = st.nextId;
-      datePref = st.datePref;
-      pickerMode = st.calMode;
-      save();
-      render();
-      toast('تمت استعادة البيانات من الملف');
-    };
-    reader.readAsText(file);
-  }
-
-  let toastTimer = null;
-  function toast(msg) {
-    const el = document.getElementById('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
-  }
-
-  document.getElementById('confirmDeleteBtn').addEventListener('click', doDelete);
-  document.getElementById('confirmEndBtn').addEventListener('click', doEnd);
-  document.getElementById('modal').addEventListener('click', function (e) {
-    if (e.target === this) closeModal();
-  });
-  document.getElementById('pickerModal').addEventListener('click', function (e) {
-    if (e.target === this) closePicker();
-  });
-  document.getElementById('confirmOverlay').addEventListener('click', function (e) {
-    if (e.target === this) closeConfirm();
-  });
-  document.getElementById('endOverlay').addEventListener('click', function (e) {
-    if (e.target === this) closeEndConfirm();
-  });
-  document.getElementById('importFile').addEventListener('change', function (e) {
-    importBackupFile(e.target.files[0]);
-    e.target.value = '';
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') { closeModal(); closePicker(); closeConfirm(); closeEndConfirm(); }
-  });
-
-  window.openModal = openModal;
-  window.closeModal = closeModal;
-  window.saveContract = saveContract;
-  window.askEnd = askEnd;
-  window.closeEndConfirm = closeEndConfirm;
-  window.askDelete = askDelete;
-  window.closeConfirm = closeConfirm;
-  window.setView = setView;
-  window.render = render;
-  window.openPicker = openPicker;
-  window.closePicker = closePicker;
-  window.calToggle = calToggle;
-  window.calToday = calToday;
-  window.calNav = calNav;
-  window.pickDate = pickDate;
-  window.toggleDatePref = toggleDatePref;
-  window.setEndMode = setEndMode;
-  window.setDays = setDays;
-  window.toggleCard = toggleCard;
-  window.exportBackup = exportBackup;
-  window.importBackupFile = importBackupFile;
-
-  init();
-})();
-</script>
-</body>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+      (function () {
+        const STORAGE_KEY = "shams_contracts_v1";
+        const CAL_MODE_KEY = STORAGE_KEY + "_cal";
+        const STATE_FILE = "shams_contracts_v1.json";
+        const ENDING_SOON_DAYS = 30;
+
+        const gregMonths = [
+          "يناير",
+          "فبراير",
+          "مارس",
+          "أبريل",
+          "مايو",
+          "يونيو",
+          "يوليو",
+          "أغسطس",
+          "سبتمبر",
+          "أكتوبر",
+          "نوفمبر",
+          "ديسمبر",
+        ];
+        const hijriMonths = [
+          "محرم",
+          "صفر",
+          "ربيع الأول",
+          "ربيع الآخر",
+          "جمادى الأولى",
+          "جمادى الآخرة",
+          "رجب",
+          "شعبان",
+          "رمضان",
+          "شوال",
+          "ذو القعدة",
+          "ذو الحجة",
+        ];
+        const weekLabels = [
+          "الأحد",
+          "الاثنين",
+          "الثلاثاء",
+          "الأربعاء",
+          "الخميس",
+          "الجمعة",
+          "السبت",
+        ];
+
+        let contracts = [];
+        let idCounter = 1;
+        let view = "current";
+        let pendingDeleteId = null;
+        let pendingEndId = null;
+        let endMode = "manual";
+        let selectedDays = null;
+        let datePref = "gregorian";
+        let storageMode = "";
+
+        /* ---------------- JSON-file storage (Origin Private File System) ---------------- */
+
+        function supportsOPFS() {
+          try {
+            return !!(navigator.storage && navigator.storage.getDirectory);
+          } catch (e) {
+            return false;
+          }
+        }
+
+        async function persistRaw(obj) {
+          const json = JSON.stringify(obj);
+          if (supportsOPFS()) {
+            try {
+              const root = await navigator.storage.getDirectory();
+              const fh = await root.getFileHandle(STATE_FILE, { create: true });
+              const w = await fh.createWritable();
+              await w.write(json);
+              await w.close();
+              return "opfs";
+            } catch (e) {}
+          }
+          try {
+            localStorage.setItem(STORAGE_KEY, json);
+            return "local";
+          } catch (e) {
+            return null;
+          }
+        }
+
+        async function loadRaw() {
+          if (supportsOPFS()) {
+            try {
+              const root = await navigator.storage.getDirectory();
+              const fh = await root.getFileHandle(STATE_FILE);
+              const file = await fh.getFile();
+              const txt = await file.text();
+              if (txt) return txt;
+            } catch (e) {}
+          }
+          try {
+            return localStorage.getItem(STORAGE_KEY);
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function parseState(raw) {
+          try {
+            const obj = JSON.parse(raw);
+            if (Array.isArray(obj)) {
+              return {
+                legacy: true,
+                contracts: obj,
+                nextId: obj.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1,
+                datePref: "gregorian",
+                calMode: "gregorian",
+              };
+            }
+            const list = Array.isArray(obj.contracts) ? obj.contracts : [];
+            const maxId = list.reduce((m, c) => Math.max(m, c.id || 0), 0);
+            return {
+              contracts: list,
+              nextId: obj.nextId > 0 ? obj.nextId : maxId + 1,
+              datePref: obj.datePref || "gregorian",
+              calMode: obj.calMode || "gregorian",
+            };
+          } catch (e) {
+            return null;
+          }
+        }
+
+        function buildStateObject() {
+          return {
+            version: 1,
+            nextId: idCounter,
+            datePref: datePref,
+            calMode: pickerMode,
+            contracts: contracts,
+          };
+        }
+
+        let _saveChain = Promise.resolve();
+
+        function save() {
+          const obj = buildStateObject();
+          _saveChain = _saveChain
+            .then(() => persistRaw(obj))
+            .then((m) => {
+              storageMode = m || "خطأ";
+              updateStorageStatus();
+            })
+            .catch(() => {
+              storageMode = "خطأ";
+              updateStorageStatus();
+            });
+          return _saveChain;
+        }
+
+        function updateStorageStatus() {
+          const el = document.getElementById("storageStatus");
+          if (el) {
+            el.textContent =
+              storageMode === "opfs"
+                ? "طريقة الحفظ: نظام الملفات الخاص بالمتصفح (OPFS)"
+                : storageMode === "local"
+                  ? "طريقة الحفظ: مخزن المتصفح"
+                  : "";
+          }
+        }
+
+        function nextId() {
+          const max = contracts.reduce((m, c) => Math.max(m, c.id || 0), 0);
+          let id = Math.max(idCounter, max + 1);
+          idCounter = id + 1;
+          return id;
+        }
+
+        async function init() {
+          const raw = await loadRaw();
+          const st = raw ? parseState(raw) : null;
+          if (st) {
+            contracts = st.contracts;
+            idCounter = st.nextId;
+            datePref = st.datePref;
+            pickerMode = st.calMode;
+            if (st.legacy) {
+              try {
+                datePref =
+                  localStorage.getItem(STORAGE_KEY + "_datepref") || datePref;
+                pickerMode = localStorage.getItem(CAL_MODE_KEY) || pickerMode;
+                const n = parseInt(
+                  localStorage.getItem(STORAGE_KEY + "_nextid"),
+                  10,
+                );
+                if (!isNaN(n) && n > idCounter) idCounter = n;
+              } catch (e) {}
+            }
+          } else {
+            try {
+              datePref =
+                localStorage.getItem(STORAGE_KEY + "_datepref") || "gregorian";
+              pickerMode = localStorage.getItem(CAL_MODE_KEY) || "gregorian";
+            } catch (e) {}
+          }
+          render();
+          save();
+        }
+
+        function pad2(n) {
+          return String(n).padStart(2, "0");
+        }
+
+        function todayYMD() {
+          const d = new Date();
+          return (
+            d.getFullYear() +
+            "-" +
+            pad2(d.getMonth() + 1) +
+            "-" +
+            pad2(d.getDate())
+          );
+        }
+
+        function ymdFromUTC(y, m, d) {
+          return y + "-" + pad2(m) + "-" + pad2(d);
+        }
+
+        function daysUntil(ymd) {
+          const d = new Date(ymd + "T00:00:00Z");
+          const now = new Date();
+          now.setHours(0, 0, 0, 0);
+          const todayUTC = Date.UTC(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+          );
+          return Math.round(
+            (Date.parse(ymd + "T00:00:00Z") - todayUTC) / 86400000,
+          );
+        }
+
+        function computeStatus(c) {
+          if (c.status === "ended") return "ended";
+          if (c.end && c.end < todayYMD()) return "ended";
+          if (c.start && c.start > todayYMD()) return "active";
+          return "current";
+        }
+
+        function isEndingSoon(c) {
+          if (computeStatus(c) !== "current") return false;
+          const d = daysUntil(c.end);
+          return d >= 0 && d <= ENDING_SOON_DAYS;
+        }
+
+        function syncStatuses() {
+          let changed = false;
+          contracts.forEach((c) => {
+            const s = computeStatus(c);
+            if (s !== c.status) {
+              c.status = s;
+              changed = true;
+            }
+          });
+          if (changed) save();
+        }
+
+        function esc(str) {
+          return String(str == null ? "" : str)
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#39;");
+        }
+
+        function formatDate(ymd) {
+          if (!ymd) return "—";
+          const p = ymd.split("-");
+          if (p.length !== 3) return ymd;
+          return p[2] + "/" + p[1] + "/" + p[0];
+        }
+
+        function formatPrice(n) {
+          return n == null || n === ""
+            ? "—"
+            : Number(n).toLocaleString("ar-SA") + " ر.س";
+        }
+
+        /* ---------------- Hijri / Gregorian conversion (Umm al-Qura) ---------------- */
+
+        function arNum(str) {
+          return String(str == null ? "" : str)
+            .replace(/[٠-٩]/g, function (d) {
+              return "٠١٢٣٤٥٦٧٨٩".indexOf(d);
+            })
+            .replace(/[۰-۹]/g, function (d) {
+              return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
+            });
+        }
+
+        function buildFormatter(locale) {
+          const keys = ["islamic-umalqura", "islamic-civil", "islamic"];
+          for (const k of keys) {
+            try {
+              const f = new Intl.DateTimeFormat(locale + "-u-ca-" + k, {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+                timeZone: "UTC",
+              });
+              const p = f.formatToParts(new Date("2024-03-11T00:00:00Z"));
+              const y = parseInt(
+                arNum((p.find((x) => x.type === "year") || {}).value),
+                10,
+              );
+              if (y >= 1300 && y <= 1600) return f;
+            } catch (e) {}
+          }
+          return null;
+        }
+
+        const islamicEn = buildFormatter("en-US");
+        const islamicAr = buildFormatter("ar-SA");
+        const HIJRI_OK = !!islamicEn && !!islamicAr;
+
+        function toHijri(ymd) {
+          const parts = islamicEn.formatToParts(new Date(ymd + "T00:00:00Z"));
+          let year = 0,
+            month = 0,
+            day = 0;
+          parts.forEach((p) => {
+            if (p.type === "year") year = parseInt(arNum(p.value), 10);
+            if (p.type === "month") month = parseInt(arNum(p.value), 10);
+            if (p.type === "day") day = parseInt(arNum(p.value), 10);
+          });
+          return { year, month, day };
+        }
+
+        function hijriRank(hy, hm, hd) {
+          return hy * 372 + (hm - 1) * 31 + (hd - 1);
+        }
+
+        function normMonth(y, m) {
+          while (m > 12) {
+            m -= 12;
+            y++;
+          }
+          while (m < 1) {
+            m += 12;
+            y--;
+          }
+          return { year: y, month: m };
+        }
+
+        function fromHijri(hy, hm, hd) {
+          const target = hijriRank(hy, hm, hd);
+          let lo =
+            Date.UTC(622, 6, 19) +
+            (hy - 1) * 354.367 * 86400000 -
+            366 * 86400000;
+          let hi = lo + 800 * 86400000;
+          while (lo < hi) {
+            const mid = Math.floor((lo + hi) / 2);
+            const d = new Date(mid);
+            const ymd = ymdFromUTC(
+              d.getUTCFullYear(),
+              d.getUTCMonth() + 1,
+              d.getUTCDate(),
+            );
+            const h = toHijri(ymd);
+            if (hijriRank(h.year, h.month, h.day) < target) lo = mid + 86400000;
+            else hi = mid;
+          }
+          const d = new Date(lo);
+          return ymdFromUTC(
+            d.getUTCFullYear(),
+            d.getUTCMonth() + 1,
+            d.getUTCDate(),
+          );
+        }
+
+        function daysInHijriMonth(hy, hm) {
+          const a = normMonth(hy, hm);
+          const b = normMonth(hy, hm + 1);
+          const d1 = Date.parse(fromHijri(a.year, a.month, 1) + "T00:00:00Z");
+          const d2 = Date.parse(fromHijri(b.year, b.month, 1) + "T00:00:00Z");
+          return Math.round((d2 - d1) / 86400000);
+        }
+
+        function addMonthsYMD(ymd, delta) {
+          const [y, m] = ymd.split("-").map(Number);
+          const d = new Date(Date.UTC(y, m - 1 + delta, 1));
+          return ymdFromUTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1);
+        }
+
+        function addDaysYMD(ymd, days) {
+          const d = new Date(Date.parse(ymd + "T00:00:00Z"));
+          d.setUTCDate(d.getUTCDate() + days);
+          return ymdFromUTC(
+            d.getUTCFullYear(),
+            d.getUTCMonth() + 1,
+            d.getUTCDate(),
+          );
+        }
+
+        function applyDurationToEnd() {
+          const start = document.getElementById("fStart").value;
+          if (!start || !selectedDays) return;
+          renderDateField(
+            "fEnd",
+            "fEndDisplay",
+            addDaysYMD(start, selectedDays),
+          );
+        }
+
+        function setEndMode(mode) {
+          endMode = mode;
+          updateEndModeUI();
+          if (mode === "days") applyDurationToEnd();
+        }
+
+        function setDays(btn) {
+          selectedDays = parseInt(btn.dataset.days, 10);
+          updateEndModeUI();
+          applyDurationToEnd();
+        }
+
+        function updateEndModeUI() {
+          document
+            .getElementById("modeManual")
+            .classList.toggle("active", endMode === "manual");
+          document
+            .getElementById("modeDays")
+            .classList.toggle("active", endMode === "days");
+          document.getElementById("fEndField").style.display =
+            endMode === "manual" ? "" : "none";
+          document.getElementById("durPresets").style.display =
+            endMode === "days" ? "" : "none";
+          document
+            .querySelectorAll("#durPresets .dur-preset")
+            .forEach((b) =>
+              b.classList.toggle("active", b.dataset.days == selectedDays),
+            );
+        }
+
+        function daysInGregMonth(ymd) {
+          const d1 = Date.parse(ymd + "T00:00:00Z");
+          const d2 = Date.parse(addMonthsYMD(ymd, 1) + "T00:00:00Z");
+          return Math.round((d2 - d1) / 86400000);
+        }
+
+        function gregToHijriStr(ymd) {
+          if (!ymd || !HIJRI_OK) return "";
+          try {
+            return islamicAr.format(new Date(ymd + "T00:00:00Z"));
+          } catch (e) {
+            return "";
+          }
+        }
+
+        /* ---------------- Custom date picker ---------------- */
+
+        let pickerField = null;
+        let pickerDisplay = null;
+        let pickerMode = "gregorian";
+        let cur = todayYMD();
+
+        function openPicker(fieldId, displayId) {
+          pickerField = fieldId;
+          pickerDisplay = displayId;
+          const val = document.getElementById(fieldId).value;
+          cur = val || todayYMD();
+          document.getElementById("calToggle").style.display = HIJRI_OK
+            ? ""
+            : "none";
+          renderCal();
+          document.getElementById("pickerModal").classList.add("show");
+        }
+
+        function closePicker() {
+          document.getElementById("pickerModal").classList.remove("show");
+        }
+
+        function calToggle() {
+          if (!HIJRI_OK) return;
+          pickerMode = pickerMode === "gregorian" ? "hijri" : "gregorian";
+          save();
+          renderCal();
+        }
+
+        function calToday() {
+          cur = todayYMD();
+          renderCal();
+        }
+
+        function calNav(dir) {
+          if (pickerMode === "gregorian") {
+            cur = addMonthsYMD(cur, dir);
+          } else {
+            const h = toHijri(cur);
+            const t = normMonth(h.year, h.month + dir);
+            cur = fromHijri(t.year, t.month, 1);
+          }
+          renderCal();
+        }
+
+        function pickDate(ymd) {
+          if (dayDisabled(ymd)) return;
+          document.getElementById(pickerField).value = ymd;
+          renderDateField(pickerField, pickerDisplay, ymd);
+          if (pickerField === "fStart" && endMode === "days")
+            applyDurationToEnd();
+          closePicker();
+        }
+
+        function dayDisabled(ymd) {
+          if (endMode === "days") return false;
+          if (pickerField === "fStart") {
+            const max = document.getElementById("fEnd").value;
+            return max ? ymd > max : false;
+          }
+          if (pickerField === "fEnd") {
+            const min = document.getElementById("fStart").value;
+            return min ? ymd < min : false;
+          }
+          return false;
+        }
+
+        function renderCal() {
+          const grid = document.getElementById("calGrid");
+          const title = document.getElementById("calTitle");
+          const toggle = document.getElementById("calToggle");
+          const mode = pickerMode;
+          toggle.textContent =
+            mode === "gregorian" ? "تحويل إلى هجري" : "تحويل إلى ميلادي";
+
+          const selYMD = document.getElementById(pickerField).value;
+          const tYMD = todayYMD();
+          let startIdx,
+            daysIn,
+            cells = "";
+
+          if (mode === "gregorian") {
+            const [y, m] = cur.split("-").map(Number);
+            const ym1 = y + "-" + pad2(m) + "-01";
+            startIdx = new Date(ym1 + "T00:00:00Z").getUTCDay();
+            daysIn = daysInGregMonth(ym1);
+            title.textContent = gregMonths[m - 1] + " " + y;
+            for (let i = 1; i <= daysIn; i++) {
+              const ymd = ymdFromUTC(y, m, i);
+              cells += dayCell(i, ymd, ymd === selYMD, ymd === tYMD);
+            }
+          } else {
+            const h = toHijri(cur);
+            daysIn = daysInHijriMonth(h.year, h.month);
+            const d1 = fromHijri(h.year, h.month, 1);
+            startIdx = new Date(d1 + "T00:00:00Z").getUTCDay();
+            title.textContent = hijriMonths[h.month - 1] + " " + h.year + " هـ";
+            const tH = toHijri(tYMD);
+            for (let i = 1; i <= daysIn; i++) {
+              const ymd = fromHijri(h.year, h.month, i);
+              const isToday =
+                h.year === tH.year && h.month === tH.month && i === tH.day;
+              cells += dayCell(i, ymd, ymd === selYMD, isToday);
+            }
+          }
+
+          let html = weekLabels
+            .map((l) => '<div class="dow">' + l + "</div>")
+            .join("");
+          for (let i = 0; i < startIdx; i++) html += "<div></div>";
+          html += cells;
+          grid.innerHTML = html;
+
+          let hint = HIJRI_OK
+            ? mode === "gregorian"
+              ? "اختر تاريخًا بالتقويم الميلادي"
+              : "اختر تاريخًا بالهجري وسيُحوَّل تلقائيًا"
+            : "اختر تاريخًا بالتقويم الميلادي";
+          if (pickerField === "fStart")
+            hint += " — لا يمكن أن يتجاوز تاريخ نهاية العقد";
+          if (pickerField === "fEnd")
+            hint += " — لا يمكن أن يسبق تاريخ بداية العقد";
+          document.getElementById("calHint").textContent = hint;
+        }
+
+        function dayCell(label, ymd, selected, isToday) {
+          let cls = "day";
+          if (isToday && !selected) cls += " today";
+          if (selected) cls += " selected";
+          const dis = dayDisabled(ymd);
+          if (dis) cls += " disabled";
+          return (
+            '<button type="button" class="' +
+            cls +
+            '"' +
+            (dis ? "" : " onclick=\"pickDate('" + ymd + "')\"") +
+            ">" +
+            label +
+            "</button>"
+          );
+        }
+
+        /* ---------------- Views ---------------- */
+
+        function setView(v) {
+          view = v;
+          document
+            .getElementById("tabCurrent")
+            .classList.toggle("active", v === "current");
+          document
+            .getElementById("tabUpcoming")
+            .classList.toggle("active", v === "upcoming");
+          document
+            .getElementById("tabEnding")
+            .classList.toggle("active", v === "ending");
+          document
+            .getElementById("tabEnded")
+            .classList.toggle("active", v === "ended");
+          document
+            .getElementById("tabAll")
+            .classList.toggle("active", v === "all");
+          render();
+        }
+
+        function isMobile() {
+          return window.matchMedia("(max-width: 700px)").matches;
+        }
+
+        function toggleCard(tr, e) {
+          if (!isMobile()) return;
+          if (e && e.target.closest("button, a, input, select, textarea"))
+            return;
+          tr.classList.toggle("folded");
+        }
+
+        function visibleContracts() {
+          const q = document
+            .getElementById("searchInput")
+            .value.trim()
+            .toLowerCase();
+          return contracts.filter((c) => {
+            const status = computeStatus(c);
+            if (view === "current" && status !== "current") return false;
+            if (view === "upcoming" && status !== "active") return false;
+            if (view === "ending" && !isEndingSoon(c)) return false;
+            if (view === "ended" && status !== "ended") return false;
+            if (q) {
+              const hay = (
+                c.name +
+                " " +
+                c.phone +
+                " " +
+                c.contractNo +
+                " " +
+                (c.notes || "")
+              ).toLowerCase();
+              if (!hay.includes(q)) return false;
+            }
+            return true;
+          });
+        }
+
+        function dateCell(ymd, label, cls) {
+          const greg = formatDate(ymd);
+          const hijri = HIJRI_OK ? gregToHijriStr(ymd) : "";
+          const useHijri = datePref === "hijri" && !!hijri;
+          return (
+            '<td data-label="' +
+            label +
+            '"' +
+            (cls ? ' class="' + cls + '"' : "") +
+            ">" +
+            (useHijri ? hijri : greg) +
+            '<div class="hijri-sub">' +
+            (useHijri ? greg : hijri) +
+            "</div>" +
+            "</td>"
+          );
+        }
+
+        function render() {
+          syncStatuses();
+          updateDatePrefBtn();
+          const list = visibleContracts();
+          const tbody = document.getElementById("tableBody");
+
+          const currentCount = contracts.filter(
+            (c) => computeStatus(c) === "current",
+          ).length;
+          const activeCount = contracts.filter(
+            (c) => computeStatus(c) === "active",
+          ).length;
+          const endedCount = contracts.filter(
+            (c) => computeStatus(c) === "ended",
+          ).length;
+          const endingCount = contracts.filter(isEndingSoon).length;
+
+          document.getElementById("statTotal").textContent = contracts.length;
+          document.getElementById("statCurrent").textContent = currentCount;
+          document.getElementById("statActive").textContent = activeCount;
+          document.getElementById("statEnded").textContent = endedCount;
+          document.getElementById("tabEnding").innerHTML =
+            'قرب الانتهاء <span class="cnt">(' + endingCount + ")</span>";
+
+          if (!list.length) {
+            const q = document.getElementById("searchInput").value.trim();
+            const msg = q
+              ? "لا توجد نتائج مطابقة للبحث"
+              : {
+                  current: "لا توجد عقود حالية",
+                  upcoming: "لا توجد عقود قادمة",
+                  ending: "لا توجد عقود على وشك الانتهاء",
+                  ended: "لا توجد عقود منتهية",
+                  all: "لا توجد عقود",
+                }[view] || "لا توجد عقود";
+            tbody.innerHTML =
+              '<tr><td colspan="11" class="empty-cell"><div class="empty">' +
+              msg +
+              "</div></td></tr>";
+            return;
+          }
+
+          list.sort((a, b) => {
+            const sa = computeStatus(a),
+              sb = computeStatus(b);
+            if (view === "all" && sa !== sb)
+              return (
+                { current: 0, active: 1, ended: 2 }[sa] -
+                { current: 0, active: 1, ended: 2 }[sb]
+              );
+            if (view === "ending") return daysUntil(a.end) - daysUntil(b.end);
+            return b.id - a.id;
+          });
+
+          tbody.innerHTML = list
+            .map((c) => {
+              const status = computeStatus(c);
+              const soon = isEndingSoon(c);
+              let badge = '<span class="badge badge-active">قادم</span>';
+              if (status === "current") {
+                badge = soon
+                  ? '<span class="badge badge-soon">ينتهي قريبًا</span>'
+                  : '<span class="badge badge-current">نشط</span>';
+              } else if (status === "ended") {
+                badge = '<span class="badge badge-ended">منتهي</span>';
+              }
+              const endCls = status === "current" && soon ? "soon" : "";
+              const endBtn =
+                status === "current"
+                  ? '<button class="btn btn-sm btn-danger" onclick="askEnd(' +
+                    c.id +
+                    ')">إنهاء</button>'
+                  : "";
+              return (
+                '<tr class="row-card' +
+                (isMobile() ? " folded" : "") +
+                '" onclick="toggleCard(this, event)">' +
+                '<td data-label="#">' +
+                c.id +
+                "</td>" +
+                '<td data-label="الاسم الكامل"><b>' +
+                esc(c.name) +
+                '</b><span class="chev">▾</span></td>' +
+                '<td data-label="رقم الهاتف" dir="ltr" style="text-align:right">' +
+                (esc(c.phone) || "—") +
+                "</td>" +
+                '<td data-label="رقم العقد">' +
+                esc(c.contractNo) +
+                "</td>" +
+                '<td data-label="الغرفة">' +
+                c.room +
+                "</td>" +
+                '<td data-label="السعر">' +
+                formatPrice(c.price) +
+                "</td>" +
+                dateCell(c.start, "البداية", "") +
+                dateCell(c.end, "النهاية", endCls) +
+                '<td data-label="الحالة">' +
+                badge +
+                "</td>" +
+                '<td data-label="ملاحظات" class="notes-cell">' +
+                (esc(c.notes) || "—") +
+                "</td>" +
+                '<td data-label="إجراءات" class="actions-td"><div class="actions">' +
+                endBtn +
+                '<button class="btn btn-sm btn-success" onclick="openModal(' +
+                c.id +
+                ')">تعديل</button>' +
+                '<button class="btn btn-sm btn-danger" onclick="askDelete(' +
+                c.id +
+                ')">حذف</button>' +
+                "</div></td>" +
+                "</tr>"
+              );
+            })
+            .join("");
+        }
+
+        /* ---------------- Form ---------------- */
+
+        function renderDateField(fieldId, displayId, ymd) {
+          const hidden = document.getElementById(fieldId);
+          const input = document.getElementById(displayId);
+          const hint = document.getElementById(fieldId + "Hijri");
+          hidden.value = ymd || "";
+          if (!ymd) {
+            input.value = "";
+            if (hint) hint.textContent = "";
+            return;
+          }
+          const greg = formatDate(ymd);
+          const hijri = HIJRI_OK ? gregToHijriStr(ymd) : "";
+          if (datePref === "hijri" && hijri) {
+            input.value = hijri;
+            if (hint) hint.textContent = greg;
+          } else {
+            input.value = greg;
+            if (hint) hint.textContent = hijri;
+          }
+        }
+
+        function toggleDatePref() {
+          datePref = datePref === "hijri" ? "gregorian" : "hijri";
+          save();
+          updateDatePrefBtn();
+          render();
+          renderDateField(
+            "fStart",
+            "fStartDisplay",
+            document.getElementById("fStart").value,
+          );
+          renderDateField(
+            "fEnd",
+            "fEndDisplay",
+            document.getElementById("fEnd").value,
+          );
+        }
+
+        function updateDatePrefBtn() {
+          const b = document.getElementById("datePrefBtn");
+          if (b)
+            b.textContent =
+              datePref === "hijri" ? "عرض بالميلادي" : "عرض بالهجري";
+        }
+
+        function openModal(id) {
+          const c = id ? contracts.find((x) => x.id === id) : null;
+          document.getElementById("modalTitle").textContent = c
+            ? "تعديل العقد #" + c.id
+            : "إضافة عقد جديد";
+          document.getElementById("formError").textContent = "";
+          document.getElementById("fId").value = c ? c.id : "";
+          document.getElementById("fName").value = c ? c.name : "";
+          document.getElementById("fPhone").value = c ? c.phone || "" : "";
+          document.getElementById("fContractNo").value = c ? c.contractNo : "";
+          document.getElementById("fRoom").value = c ? c.room : "";
+          document.getElementById("fPrice").value = c ? c.price : "";
+          renderDateField("fStart", "fStartDisplay", c ? c.start : "");
+          renderDateField("fEnd", "fEndDisplay", c ? c.end : "");
+          endMode = "manual";
+          selectedDays = null;
+          updateEndModeUI();
+          document.getElementById("fNotes").value = c ? c.notes || "" : "";
+          document.getElementById("modal").classList.add("show");
+          const scrollEl = document.querySelector("#modal .modal");
+          if (scrollEl) scrollEl.scrollTop = 0;
+        }
+
+        function closeModal() {
+          document.getElementById("modal").classList.remove("show");
+          document.getElementById("formError").textContent = "";
+        }
+
+        function saveContract(e) {
+          e.preventDefault();
+          const errorEl = document.getElementById("formError");
+          errorEl.textContent = "";
+
+          const id = document.getElementById("fId").value;
+          const name = document.getElementById("fName").value.trim();
+          const phone = document.getElementById("fPhone").value.trim();
+          const contractNo = document
+            .getElementById("fContractNo")
+            .value.trim();
+          const room = parseInt(document.getElementById("fRoom").value, 10);
+          const price = parseFloat(document.getElementById("fPrice").value);
+          const start = document.getElementById("fStart").value;
+          const end = document.getElementById("fEnd").value;
+          const notes = document.getElementById("fNotes").value.trim();
+
+          if (!name) {
+            errorEl.textContent = "برجاء إدخال الاسم الكامل.";
+            return false;
+          }
+          if (!contractNo) {
+            errorEl.textContent = "برجاء إدخال رقم العقد.";
+            return false;
+          }
+          if (isNaN(room) || room < 1 || room > 11) {
+            errorEl.textContent = "رقم الغرفة يجب أن يكون بين 1 و 11.";
+            return false;
+          }
+          if (isNaN(price) || price < 0) {
+            errorEl.textContent = "برجاء إدخال سعر صحيح.";
+            return false;
+          }
+          if (!start || !end) {
+            errorEl.textContent = "برجاء تحديد تاريخ البداية والنهاية.";
+            return false;
+          }
+          if (end < start) {
+            errorEl.textContent =
+              "تاريخ نهاية العقد يجب أن يكون بعد تاريخ البداية.";
+            return false;
+          }
+
+          const roomTaken = contracts.some(
+            (c) => c.room === room && String(c.id) !== id,
+          );
+          if (roomTaken) {
+            errorEl.textContent =
+              "الغرفة رقم " + room + " مشغولة بالفعل بعقد آخر.";
+            return false;
+          }
+
+          const existing = id
+            ? contracts.find((x) => x.id === Number(id))
+            : null;
+
+          if (existing) {
+            existing.name = name;
+            existing.phone = phone;
+            existing.contractNo = contractNo;
+            existing.room = room;
+            existing.price = price;
+            existing.start = start;
+            existing.end = end;
+            existing.notes = notes;
+            existing.status = computeStatus(existing);
+          } else {
+            const nc = {
+              id: nextId(),
+              name,
+              phone,
+              contractNo,
+              room,
+              price,
+              start,
+              end,
+              notes,
+              status: "current",
+              createdAt: new Date().toISOString(),
+            };
+            nc.status = computeStatus(nc);
+            contracts.push(nc);
+          }
+
+          save();
+          closeModal();
+          render();
+          toast(id ? "تم تعديل العقد بنجاح" : "تم إضافة العقد بنجاح");
+          if (!id) window.scrollTo({ top: 0, behavior: "smooth" });
+          return false;
+        }
+
+        function nowStamp() {
+          const d = new Date();
+          const p = (n) => String(n).padStart(2, "0");
+          return (
+            d.getFullYear() +
+            "-" +
+            p(d.getMonth() + 1) +
+            "-" +
+            p(d.getDate()) +
+            " " +
+            p(d.getHours()) +
+            ":" +
+            p(d.getMinutes())
+          );
+        }
+
+        function askEnd(id) {
+          const c = contracts.find((x) => x.id === id);
+          if (!c) return;
+          pendingEndId = id;
+          document.getElementById("endConfirmText").textContent =
+            "هل أنت متأكد من إنهاء عقد رقم " +
+            c.id +
+            " — " +
+            c.name +
+            "؟ ستُضاف ملاحظة بتاريخ الإنهاء إلى العقد.";
+          document.getElementById("endOverlay").classList.add("show");
+        }
+
+        function doEnd() {
+          if (pendingEndId == null) return;
+          const c = contracts.find((x) => x.id === pendingEndId);
+          if (c) {
+            c.status = "ended";
+            c.notes =
+              (c.notes ? c.notes + "\n" : "") +
+              "تم إنهاء العقد يدويا في " +
+              nowStamp();
+          }
+          pendingEndId = null;
+          save();
+          closeEndConfirm();
+          render();
+          toast("تم إنهاء العقد");
+        }
+
+        function closeEndConfirm() {
+          pendingEndId = null;
+          document.getElementById("endOverlay").classList.remove("show");
+        }
+
+        function askDelete(id) {
+          const c = contracts.find((x) => x.id === id);
+          if (!c) return;
+          pendingDeleteId = id;
+          document.getElementById("confirmText").textContent =
+            "هل أنت متأكد من حذف عقد رقم " +
+            c.id +
+            " — " +
+            c.name +
+            "؟ لا يمكن التراجع عن هذا الإجراء.";
+          document.getElementById("confirmOverlay").classList.add("show");
+        }
+
+        function doDelete() {
+          if (pendingDeleteId == null) return;
+          contracts = contracts.filter((x) => x.id !== pendingDeleteId);
+          pendingDeleteId = null;
+          save();
+          closeConfirm();
+          render();
+          toast("تم حذف العقد");
+        }
+
+        function closeConfirm() {
+          pendingDeleteId = null;
+          document.getElementById("confirmOverlay").classList.remove("show");
+        }
+
+        function exportBackup() {
+          const obj = buildStateObject();
+          const blob = new Blob([JSON.stringify(obj, null, 2)], {
+            type: "application/json",
+          });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = "shams_backup_" + todayYMD() + ".json";
+          document.body.appendChild(a);
+          a.click();
+          setTimeout(function () {
+            document.body.removeChild(a);
+            URL.revokeObjectURL(a.href);
+          }, 100);
+          toast("تم إنشاء النسخة الاحتياطية");
+        }
+
+        function importBackupFile(file) {
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            const st = parseState(e.target.result);
+            if (!st) {
+              toast("ملف غير صالح — لم يتم الاستعادة");
+              return;
+            }
+            contracts = st.contracts;
+            idCounter = st.nextId;
+            datePref = st.datePref;
+            pickerMode = st.calMode;
+            save();
+            render();
+            toast("تمت استعادة البيانات من الملف");
+          };
+          reader.readAsText(file);
+        }
+
+        let toastTimer = null;
+        function toast(msg) {
+          const el = document.getElementById("toast");
+          el.textContent = msg;
+          el.classList.add("show");
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+        }
+
+        document
+          .getElementById("confirmDeleteBtn")
+          .addEventListener("click", doDelete);
+        document
+          .getElementById("confirmEndBtn")
+          .addEventListener("click", doEnd);
+        document
+          .getElementById("modal")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closeModal();
+          });
+        document
+          .getElementById("pickerModal")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closePicker();
+          });
+        document
+          .getElementById("confirmOverlay")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closeConfirm();
+          });
+        document
+          .getElementById("endOverlay")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closeEndConfirm();
+          });
+        document
+          .getElementById("importFile")
+          .addEventListener("change", function (e) {
+            importBackupFile(e.target.files[0]);
+            e.target.value = "";
+          });
+        document.addEventListener("keydown", function (e) {
+          if (e.key === "Escape") {
+            closeModal();
+            closePicker();
+            closeConfirm();
+            closeEndConfirm();
+          }
+        });
+
+        window.openModal = openModal;
+        window.closeModal = closeModal;
+        window.saveContract = saveContract;
+        window.askEnd = askEnd;
+        window.closeEndConfirm = closeEndConfirm;
+        window.askDelete = askDelete;
+        window.closeConfirm = closeConfirm;
+        window.setView = setView;
+        window.render = render;
+        window.openPicker = openPicker;
+        window.closePicker = closePicker;
+        window.calToggle = calToggle;
+        window.calToday = calToday;
+        window.calNav = calNav;
+        window.pickDate = pickDate;
+        window.toggleDatePref = toggleDatePref;
+        window.setEndMode = setEndMode;
+        window.setDays = setDays;
+        window.toggleCard = toggleCard;
+        window.exportBackup = exportBackup;
+        window.importBackupFile = importBackupFile;
+
+        init();
+      })();
+    </script>
+  </body>
 </html>

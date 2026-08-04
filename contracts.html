@@ -3,6 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="شمس">
 <title>نظام إدارة العقود شمس</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -207,8 +211,12 @@
     </div>
     <div class="controls">
       <button class="btn btn-outline" id="datePrefBtn" onclick="toggleDatePref()">عرض بالهجري</button>
+      <button class="btn btn-outline" onclick="exportBackup()">⬇ نسخة احتياطية</button>
+      <button class="btn btn-outline" onclick="document.getElementById('importFile').click()">⬆ استعادة</button>
+      <input type="file" id="importFile" accept=".json,application/json" style="display:none">
       <button class="btn btn-primary" onclick="openModal()">＋ إضافة عقد</button>
     </div>
+    <span id="storageStatus" style="font-size:12px;color:#64748b"></span>
   </div>
 
   <div class="table-wrap">
@@ -348,49 +356,140 @@
 (function () {
   const STORAGE_KEY = 'shams_contracts_v1';
   const CAL_MODE_KEY = STORAGE_KEY + '_cal';
+  const STATE_FILE = 'shams_contracts_v1.json';
   const ENDING_SOON_DAYS = 30;
 
   const gregMonths = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
   const hijriMonths = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
   const weekLabels = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
 
-  let contracts = load();
-  let idCounter = loadIdCounter();
+  let contracts = [];
+  let idCounter = 1;
   let view = 'current';
   let pendingDeleteId = null;
   let pendingEndId = null;
   let endMode = 'manual';
   let selectedDays = null;
   let datePref = 'gregorian';
-  try { datePref = localStorage.getItem(STORAGE_KEY + '_datepref') || 'gregorian'; } catch (e) {}
+  let storageMode = '';
 
-  function load() {
+  /* ---------------- JSON-file storage (Origin Private File System) ---------------- */
+
+  function supportsOPFS() {
+    try { return !!(navigator.storage && navigator.storage.getDirectory); } catch (e) { return false; }
+  }
+
+  async function persistRaw(obj) {
+    const json = JSON.stringify(obj);
+    if (supportsOPFS()) {
+      try {
+        const root = await navigator.storage.getDirectory();
+        const fh = await root.getFileHandle(STATE_FILE, { create: true });
+        const w = await fh.createWritable();
+        await w.write(json);
+        await w.close();
+        return 'opfs';
+      } catch (e) {}
+    }
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch (e) {
-      return [];
+      localStorage.setItem(STORAGE_KEY, json);
+      return 'local';
+    } catch (e) { return null; }
+  }
+
+  async function loadRaw() {
+    if (supportsOPFS()) {
+      try {
+        const root = await navigator.storage.getDirectory();
+        const fh = await root.getFileHandle(STATE_FILE);
+        const file = await fh.getFile();
+        const txt = await file.text();
+        if (txt) return txt;
+      } catch (e) {}
+    }
+    try { return localStorage.getItem(STORAGE_KEY); } catch (e) { return null; }
+  }
+
+  function parseState(raw) {
+    try {
+      const obj = JSON.parse(raw);
+      if (Array.isArray(obj)) {
+        return {
+          legacy: true,
+          contracts: obj,
+          nextId: obj.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1,
+          datePref: 'gregorian',
+          calMode: 'gregorian'
+        };
+      }
+      const list = Array.isArray(obj.contracts) ? obj.contracts : [];
+      const maxId = list.reduce((m, c) => Math.max(m, c.id || 0), 0);
+      return {
+        contracts: list,
+        nextId: obj.nextId > 0 ? obj.nextId : maxId + 1,
+        datePref: obj.datePref || 'gregorian',
+        calMode: obj.calMode || 'gregorian'
+      };
+    } catch (e) { return null; }
+  }
+
+  function buildStateObject() {
+    return { version: 1, nextId: idCounter, datePref: datePref, calMode: pickerMode, contracts: contracts };
+  }
+
+  let _saveChain = Promise.resolve();
+
+  function save() {
+    const obj = buildStateObject();
+    _saveChain = _saveChain
+      .then(() => persistRaw(obj))
+      .then(m => { storageMode = m || 'خطأ'; updateStorageStatus(); })
+      .catch(() => { storageMode = 'خطأ'; updateStorageStatus(); });
+    return _saveChain;
+  }
+
+  function updateStorageStatus() {
+    const el = document.getElementById('storageStatus');
+    if (el) {
+      el.textContent = storageMode === 'opfs'
+        ? '💾 يُحفظ تلقائيًا في ملف contracts.json'
+        : storageMode === 'local'
+          ? 'يُحفظ في مخزن المتصفح (وضع احتياطي)'
+          : '';
     }
   }
 
-  function save() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(contracts));
-  }
-
-  function loadIdCounter() {
-    try {
-      const raw = localStorage.getItem(STORAGE_KEY + '_nextid');
-      if (raw != null) return parseInt(raw, 10);
-    } catch (e) {}
-    return contracts.reduce((m, c) => Math.max(m, c.id), 0) + 1;
-  }
-
   function nextId() {
-    const max = contracts.reduce((m, c) => Math.max(m, c.id), 0);
+    const max = contracts.reduce((m, c) => Math.max(m, c.id || 0), 0);
     let id = Math.max(idCounter, max + 1);
     idCounter = id + 1;
-    try { localStorage.setItem(STORAGE_KEY + '_nextid', String(idCounter)); } catch (e) {}
     return id;
+  }
+
+  async function init() {
+    const raw = await loadRaw();
+    const st = raw ? parseState(raw) : null;
+    if (st) {
+      contracts = st.contracts;
+      idCounter = st.nextId;
+      datePref = st.datePref;
+      pickerMode = st.calMode;
+      if (st.legacy) {
+        try {
+          datePref = localStorage.getItem(STORAGE_KEY + '_datepref') || datePref;
+          pickerMode = localStorage.getItem(CAL_MODE_KEY) || pickerMode;
+          const n = parseInt(localStorage.getItem(STORAGE_KEY + '_nextid'), 10);
+          if (!isNaN(n) && n > idCounter) idCounter = n;
+        } catch (e) {}
+      }
+    } else {
+      try {
+        datePref = localStorage.getItem(STORAGE_KEY + '_datepref') || 'gregorian';
+        pickerMode = localStorage.getItem(CAL_MODE_KEY) || 'gregorian';
+      } catch (e) {}
+    }
+    render();
+    save();
   }
 
   function pad2(n) { return String(n).padStart(2, '0'); }
@@ -578,8 +677,6 @@
   let pickerMode = 'gregorian';
   let cur = todayYMD();
 
-  try { pickerMode = localStorage.getItem(CAL_MODE_KEY) || 'gregorian'; } catch (e) {}
-
   function openPicker(fieldId, displayId) {
     pickerField = fieldId;
     pickerDisplay = displayId;
@@ -597,7 +694,7 @@
   function calToggle() {
     if (!HIJRI_OK) return;
     pickerMode = pickerMode === 'gregorian' ? 'hijri' : 'gregorian';
-    try { localStorage.setItem(CAL_MODE_KEY, pickerMode); } catch (e) {}
+    save();
     renderCal();
   }
 
@@ -835,7 +932,7 @@
 
   function toggleDatePref() {
     datePref = datePref === 'hijri' ? 'gregorian' : 'hijri';
-    try { localStorage.setItem(STORAGE_KEY + '_datepref', datePref); } catch (e) {}
+    save();
     updateDatePrefBtn();
     render();
     renderDateField('fStart', 'fStartDisplay', document.getElementById('fStart').value);
@@ -986,6 +1083,38 @@
     document.getElementById('confirmOverlay').classList.remove('show');
   }
 
+  function exportBackup() {
+    const obj = buildStateObject();
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'shams_backup_' + todayYMD() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () {
+      document.body.removeChild(a);
+      URL.revokeObjectURL(a.href);
+    }, 100);
+    toast('تم إنشاء النسخة الاحتياطية');
+  }
+
+  function importBackupFile(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function (e) {
+      const st = parseState(e.target.result);
+      if (!st) { toast('ملف غير صالح — لم يتم الاستعادة'); return; }
+      contracts = st.contracts;
+      idCounter = st.nextId;
+      datePref = st.datePref;
+      pickerMode = st.calMode;
+      save();
+      render();
+      toast('تمت استعادة البيانات من الملف');
+    };
+    reader.readAsText(file);
+  }
+
   let toastTimer = null;
   function toast(msg) {
     const el = document.getElementById('toast');
@@ -1008,6 +1137,10 @@
   });
   document.getElementById('endOverlay').addEventListener('click', function (e) {
     if (e.target === this) closeEndConfirm();
+  });
+  document.getElementById('importFile').addEventListener('change', function (e) {
+    importBackupFile(e.target.files[0]);
+    e.target.value = '';
   });
   document.addEventListener('keydown', function (e) {
     if (e.key === 'Escape') { closeModal(); closePicker(); closeConfirm(); closeEndConfirm(); }
@@ -1032,8 +1165,10 @@
   window.setEndMode = setEndMode;
   window.setDays = setDays;
   window.toggleCard = toggleCard;
+  window.exportBackup = exportBackup;
+  window.importBackupFile = importBackupFile;
 
-  render();
+  init();
 })();
 </script>
 </body>

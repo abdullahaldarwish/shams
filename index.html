@@ -755,19 +755,29 @@
             </div>
             <div class="field">
               <label>رقم الهاتف</label>
-              <input type="tel" id="fPhone" dir="ltr" />
+              <input type="tel" id="fPhone" dir="ltr" oninput="normalizeDigits(this)" />
             </div>
             <div class="field">
               <label>رقم العقد <span class="req">*</span></label>
-              <input type="text" id="fContractNo" />
+              <input type="text" id="fContractNo" oninput="normalizeDigits(this)" />
             </div>
             <div class="field">
               <label>رقم الغرفة (1 - 11) <span class="req">*</span></label>
-              <input type="number" id="fRoom" inputmode="numeric" />
+              <input
+                type="text"
+                id="fRoom"
+                inputmode="numeric"
+                oninput="normalizeDigits(this)"
+              />
             </div>
             <div class="field">
               <label>السعر <span class="req">*</span></label>
-              <input type="number" id="fPrice" inputmode="decimal" />
+              <input
+                type="text"
+                id="fPrice"
+                inputmode="decimal"
+                oninput="normalizeDigits(this)"
+              />
             </div>
             <div class="field">
               <label>بداية العقد <span class="req">*</span></label>
@@ -1253,6 +1263,11 @@
             .replace(/[۰-۹]/g, function (d) {
               return "۰۱۲۳۴۵۶۷۸۹".indexOf(d);
             });
+        }
+
+        function normalizeDigits(el) {
+          const norm = arNum(el.value);
+          if (norm !== el.value) el.value = norm;
         }
 
         function buildFormatter(locale) {
@@ -1840,8 +1855,10 @@
           const contractNo = document
             .getElementById("fContractNo")
             .value.trim();
-          const room = parseInt(document.getElementById("fRoom").value, 10);
-          const price = parseFloat(document.getElementById("fPrice").value);
+          const room = parseInt(arNum(document.getElementById("fRoom").value), 10);
+          const price = parseFloat(
+            arNum(document.getElementById("fPrice").value),
+          );
           const start = document.getElementById("fStart").value;
           const end = document.getElementById("fEnd").value;
           const notes = document.getElementById("fNotes").value.trim();
@@ -2102,6 +2119,7 @@
         window.calToday = calToday;
         window.calNav = calNav;
         window.pickDate = pickDate;
+        window.normalizeDigits = normalizeDigits;
         window.toggleDatePref = toggleDatePref;
         window.setEndMode = setEndMode;
         window.setDays = setDays;

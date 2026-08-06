@@ -1023,6 +1023,7 @@
         let selectedDays = null;
         let datePref = "gregorian";
         let storageMode = "";
+        let storagePersisted = null;
 
         /* ---------------- JSON-file storage (Origin Private File System) ---------------- */
 
@@ -1030,6 +1031,28 @@
           try {
             return !!(navigator.storage && navigator.storage.getDirectory);
           } catch (e) {
+            return false;
+          }
+        }
+
+        async function requestPersistentStorage() {
+          if (!(navigator.storage && navigator.storage.persist)) {
+            storagePersisted = null;
+            updateStorageStatus();
+            return false;
+          }
+          try {
+            if (await navigator.storage.persisted()) {
+              storagePersisted = true;
+              updateStorageStatus();
+              return true;
+            }
+            storagePersisted = await navigator.storage.persist();
+            updateStorageStatus();
+            return storagePersisted;
+          } catch (e) {
+            storagePersisted = null;
+            updateStorageStatus();
             return false;
           }
         }
@@ -1125,14 +1148,20 @@
 
         function updateStorageStatus() {
           const el = document.getElementById("storageStatus");
-          if (el) {
-            el.textContent =
-              storageMode === "opfs"
-                ? "طريقة الحفظ: نظام الملفات الخاص بالمتصفح (OPFS)"
-                : storageMode === "local"
-                  ? "طريقة الحفظ: مخزن المتصفح"
-                  : "";
-          }
+          if (!el) return;
+          const method =
+            storageMode === "opfs"
+              ? "طريقة الحفظ: نظام الملفات الخاص بالمتصفح (OPFS)"
+              : storageMode === "local"
+                ? "طريقة الحفظ: مخزن المتصفح"
+                : "";
+          const persist =
+            storagePersisted === true
+              ? "البيانات دائمة "
+              : storagePersisted === false
+                ? "البيانات محفوظة"
+                : "";
+          el.textContent = [method, persist].filter(Boolean).join(" · ");
         }
 
         function nextId() {
@@ -1143,6 +1172,7 @@
         }
 
         async function init() {
+          requestPersistentStorage();
           const raw = await loadRaw();
           const st = raw ? parseState(raw) : null;
           if (st) {

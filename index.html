@@ -1068,6 +1068,8 @@
 
         async function persistRaw(obj) {
           const json = JSON.stringify(obj);
+          let opfsOk = false;
+          let localOk = false;
           if (supportsOPFS()) {
             try {
               const root = await navigator.storage.getDirectory();
@@ -1075,32 +1077,34 @@
               const w = await fh.createWritable();
               await w.write(json);
               await w.close();
-              return "opfs";
+              opfsOk = true;
             } catch (e) {}
           }
           try {
             localStorage.setItem(STORAGE_KEY, json);
-            return "local";
-          } catch (e) {
-            return null;
-          }
+            localOk = true;
+          } catch (e) {}
+          if (opfsOk) return "opfs";
+          if (localOk) return "local";
+          return null;
         }
 
         async function loadRaw() {
+          let opfsText = null;
+          let localText = null;
           if (supportsOPFS()) {
             try {
               const root = await navigator.storage.getDirectory();
               const fh = await root.getFileHandle(STATE_FILE);
               const file = await fh.getFile();
               const txt = await file.text();
-              if (txt) return txt;
+              if (txt) opfsText = txt;
             } catch (e) {}
           }
           try {
-            return localStorage.getItem(STORAGE_KEY);
-          } catch (e) {
-            return null;
-          }
+            localText = localStorage.getItem(STORAGE_KEY);
+          } catch (e) {}
+          return { opfs: opfsText, local: localText };
         }
 
         function parseState(raw) {
@@ -1109,6 +1113,7 @@
             if (Array.isArray(obj)) {
               return {
                 legacy: true,
+                savedAt: 0,
                 contracts: obj,
                 nextId: obj.reduce((m, c) => Math.max(m, c.id || 0), 0) + 1,
                 datePref: "gregorian",
@@ -1119,6 +1124,7 @@
             const maxId = list.reduce((m, c) => Math.max(m, c.id || 0), 0);
             return {
               contracts: list,
+              savedAt: Number(obj.savedAt) || 0,
               nextId: obj.nextId > 0 ? obj.nextId : maxId + 1,
               datePref: obj.datePref || "gregorian",
               calMode: obj.calMode || "gregorian",
@@ -1131,6 +1137,7 @@
         function buildStateObject() {
           return {
             version: 1,
+            savedAt: Date.now(),
             nextId: idCounter,
             datePref: datePref,
             calMode: pickerMode,
@@ -1182,8 +1189,13 @@
 
         async function init() {
           requestPersistentStorage();
-          const raw = await loadRaw();
-          const st = raw ? parseState(raw) : null;
+          const sources = await loadRaw();
+          let st = null;
+          for (const raw of [sources.opfs, sources.local]) {
+            const parsed = raw ? parseState(raw) : null;
+            if (!parsed) continue;
+            if (!st || parsed.savedAt > st.savedAt) st = parsed;
+          }
           if (st) {
             contracts = st.contracts;
             idCounter = st.nextId;

@@ -755,11 +755,20 @@
             </div>
             <div class="field">
               <label>رقم الهاتف</label>
-              <input type="tel" id="fPhone" dir="ltr" oninput="normalizeDigits(this)" />
+              <input
+                type="tel"
+                id="fPhone"
+                dir="ltr"
+                oninput="normalizeDigits(this)"
+              />
             </div>
             <div class="field">
               <label>رقم العقد <span class="req">*</span></label>
-              <input type="text" id="fContractNo" oninput="normalizeDigits(this)" />
+              <input
+                type="text"
+                id="fContractNo"
+                oninput="normalizeDigits(this)"
+              />
             </div>
             <div class="field">
               <label>رقم الغرفة (1 - 11) <span class="req">*</span></label>
@@ -1885,7 +1894,10 @@
           const contractNo = document
             .getElementById("fContractNo")
             .value.trim();
-          const room = parseInt(arNum(document.getElementById("fRoom").value), 10);
+          const room = parseInt(
+            arNum(document.getElementById("fRoom").value),
+            10,
+          );
           const price = parseFloat(
             arNum(document.getElementById("fPrice").value),
           );

@@ -643,10 +643,10 @@
 
       <div class="toolbar">
         <div class="tabs">
-          <button id="tabAll" onclick="setView('all')">
+          <button id="tabAll" class="active" onclick="setView('all')">
             الكل <span class="cnt">(0)</span>
           </button>
-          <button id="tabCurrent" class="active" onclick="setView('current')">
+          <button id="tabCurrent" onclick="setView('current')">
             الحالية <span class="cnt">(0)</span>
           </button>
           <button id="tabUpcoming" onclick="setView('upcoming')">
@@ -1017,7 +1017,7 @@
 
         let contracts = [];
         let idCounter = 1;
-        let view = "current";
+        let view = "all";
         let pendingDeleteId = null;
         let pendingEndId = null;
         let pendingCancelEndId = null;

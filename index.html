@@ -976,6 +976,21 @@
       </div>
     </div>
 
+    <div class="confirm-overlay" id="cancelEndOverlay">
+      <div class="confirm-box">
+        <h3>تأكيد إلغاء إنهاء العقد</h3>
+        <p id="cancelEndConfirmText"></p>
+        <div class="row">
+          <button class="btn btn-outline" onclick="closeCancelEndConfirm()">
+            إلغاء
+          </button>
+          <button class="btn btn-danger" id="confirmCancelEndBtn">
+            إلغاء الإنهاء
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="toast" id="toast"></div>
 
     <script>
@@ -1028,9 +1043,11 @@
         let view = "current";
         let pendingDeleteId = null;
         let pendingEndId = null;
+        let pendingCancelEndId = null;
         let endMode = "manual";
         let selectedDays = null;
         let datePref = "gregorian";
+        let expandedCards = new Set();
         let storageMode = "";
         let storagePersisted = null;
 
@@ -1259,6 +1276,10 @@
 
         function computeStatus(c) {
           if (c.status === "ended") return "ended";
+          return naturalStatus(c);
+        }
+
+        function naturalStatus(c) {
           if (c.end && c.end < todayYMD()) return "ended";
           if (c.start && c.start > todayYMD()) return "active";
           return "current";
@@ -1655,6 +1676,13 @@
           if (e && e.target.closest("button, a, input, select, textarea"))
             return;
           tr.classList.toggle("folded");
+          const id = tr.getAttribute("data-id");
+          if (!id) return;
+          if (tr.classList.contains("folded")) {
+            expandedCards.delete(id);
+          } else {
+            expandedCards.add(id);
+          }
         }
 
         function visibleContracts() {
@@ -1775,9 +1803,21 @@
                     c.id +
                     ')">إنهاء</button>'
                   : "";
+              const cancelEndBtn =
+                status === "ended" &&
+                c.start < todayYMD() &&
+                c.end > todayYMD()
+                  ? '<button class="btn btn-sm btn-outline" onclick="askCancelEnd(' +
+                    c.id +
+                    ')">إلغاء الإنهاء</button>'
+                  : "";
               return (
                 '<tr class="row-card' +
-                (isMobile() ? " folded" : "") +
+                (isMobile() && !expandedCards.has(String(c.id))
+                  ? " folded"
+                  : "") +
+                '" data-id="' +
+                c.id +
                 '" onclick="toggleCard(this, event)">' +
                 '<td data-label="#">' +
                 c.id +
@@ -1807,6 +1847,7 @@
                 "</td>" +
                 '<td data-label="إجراءات" class="actions-td"><div class="actions">' +
                 endBtn +
+                cancelEndBtn +
                 '<button class="btn btn-sm btn-success" onclick="openModal(' +
                 c.id +
                 ')">تعديل</button>' +
@@ -2043,6 +2084,41 @@
           document.getElementById("endOverlay").classList.remove("show");
         }
 
+        function askCancelEnd(id) {
+          const c = contracts.find((x) => x.id === id);
+          if (!c) return;
+          pendingCancelEndId = id;
+          document.getElementById("cancelEndConfirmText").textContent =
+            "هل أنت متأكد من إلغاء إنهاء عقد رقم " +
+            c.id +
+            " — " +
+            c.name +
+            "؟ ستُضاف ملاحظة بإلغاء الإنهاء اليدوي إلى العقد.";
+          document.getElementById("cancelEndOverlay").classList.add("show");
+        }
+
+        function doCancelEnd() {
+          if (pendingCancelEndId == null) return;
+          const c = contracts.find((x) => x.id === pendingCancelEndId);
+          if (c) {
+            c.status = naturalStatus(c);
+            c.notes =
+              (c.notes ? c.notes + "\n" : "") +
+              "تم إلغاء الإنهاء اليدوي في " +
+              nowStamp();
+          }
+          pendingCancelEndId = null;
+          save();
+          closeCancelEndConfirm();
+          render();
+          toast("تم إلغاء إنهاء العقد");
+        }
+
+        function closeCancelEndConfirm() {
+          pendingCancelEndId = null;
+          document.getElementById("cancelEndOverlay").classList.remove("show");
+        }
+
         function askDelete(id) {
           const c = contracts.find((x) => x.id === id);
           if (!c) return;
@@ -2124,6 +2200,9 @@
           .getElementById("confirmEndBtn")
           .addEventListener("click", doEnd);
         document
+          .getElementById("confirmCancelEndBtn")
+          .addEventListener("click", doCancelEnd);
+        document
           .getElementById("modal")
           .addEventListener("click", function (e) {
             if (e.target === this) closeModal();
@@ -2144,6 +2223,11 @@
             if (e.target === this) closeEndConfirm();
           });
         document
+          .getElementById("cancelEndOverlay")
+          .addEventListener("click", function (e) {
+            if (e.target === this) closeCancelEndConfirm();
+          });
+        document
           .getElementById("importFile")
           .addEventListener("change", function (e) {
             importBackupFile(e.target.files[0]);
@@ -2155,6 +2239,7 @@
             closePicker();
             closeConfirm();
             closeEndConfirm();
+            closeCancelEndConfirm();
           }
         });
 
@@ -2163,6 +2248,8 @@
         window.saveContract = saveContract;
         window.askEnd = askEnd;
         window.closeEndConfirm = closeEndConfirm;
+        window.askCancelEnd = askCancelEnd;
+        window.closeCancelEndConfirm = closeCancelEndConfirm;
         window.askDelete = askDelete;
         window.closeConfirm = closeConfirm;
         window.setView = setView;

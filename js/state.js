@@ -9,6 +9,5 @@ let pendingCancelEndId = null;
 let endMode = "manual";
 let selectedDays = null;
 let datePref = "gregorian";
-let expandedCards = new Set();
 let storageMode = "";
 let storagePersisted = null;

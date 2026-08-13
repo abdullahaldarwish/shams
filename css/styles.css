@@ -141,7 +141,8 @@ header h1 {
 }
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   min-width: 900px;
 }
 th,
@@ -206,9 +207,6 @@ td.soon .hijri-sub {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
-}
-.chev {
-  display: none;
 }
 .empty-cell {
   text-align: center;
@@ -523,88 +521,58 @@ td.soon .hijri-sub {
     padding: 9px 6px;
     font-size: 13px;
   }
+
   .table-wrap {
-    border: none;
-    background: transparent;
-    overflow: visible;
-    box-shadow: none;
-  }
-  table,
-  thead,
-  tbody,
-  tr,
-  td {
-    display: block;
+    border: 1px solid #e2e8f0;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    max-height: calc(100vh - 220px);
+    max-height: calc(100dvh - 220px);
   }
   table {
-    min-width: 0;
+    min-width: 820px;
   }
-  thead {
-    display: none;
-  }
-  tbody {
-    display: block;
-  }
-  tr {
-    background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 12px 14px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  }
-  tr.row-card {
-    cursor: pointer;
-  }
-  tr.row-card .chev {
-    display: inline-block;
-    margin-inline-start: 6px;
-    color: #94a3b8;
-    font-size: 12px;
-    transition: transform 0.2s;
-  }
-  tr.row-card.folded .chev {
-    transform: rotate(-90deg);
-  }
-  tr.row-card.folded td:nth-child(n + 3) {
-    display: none;
-  }
+  th,
   td {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    border: none;
-    padding: 6px 0;
-    white-space: normal;
+    padding: 10px 12px;
   }
-  td::before {
-    content: attr(data-label);
-    font-weight: 600;
-    color: #64748b;
-    font-size: 12px;
-    flex-shrink: 0;
+
+  .col-id {
+    display: none;
   }
-  td:last-child {
-    border-bottom: none;
+
+  thead th {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    background: #f8fafc;
   }
-  td.notes-cell {
-    max-width: none;
+  .col-name {
+    position: sticky;
+    right: 0;
+    z-index: 2;
+    background: #fff;
+    box-shadow: -8px 0 8px -6px rgba(15, 23, 42, 0.14);
   }
-  td.empty-cell {
-    justify-content: center;
+  thead th.col-name {
+    z-index: 4;
+    background: #f8fafc;
   }
-  td.actions-td {
-    display: block;
-    padding-top: 10px;
+  tr:hover td.col-name {
+    background: #f8fafc;
   }
-  td.actions-td::before {
-    display: block;
-    margin-bottom: 6px;
+
+  .actions {
+    flex-wrap: nowrap;
   }
   .actions .btn {
-    flex: 1;
+    min-height: 40px;
+    white-space: nowrap;
   }
+
   .modal {
     max-width: 100%;
     border-radius: 16px 16px 0 0;

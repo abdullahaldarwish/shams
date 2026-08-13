@@ -20,24 +20,6 @@ function setView(v) {
   render();
 }
 
-function isMobile() {
-  return window.matchMedia("(max-width: 700px)").matches;
-}
-
-function toggleCard(tr, e) {
-  if (!isMobile()) return;
-  if (e && e.target.closest("button, a, input, select, textarea"))
-    return;
-  tr.classList.toggle("folded");
-  const id = tr.getAttribute("data-id");
-  if (!id) return;
-  if (tr.classList.contains("folded")) {
-    expandedCards.delete(id);
-  } else {
-    expandedCards.add(id);
-  }
-}
-
 function visibleContracts() {
   const q = document
     .getElementById("searchInput")
@@ -65,14 +47,12 @@ function visibleContracts() {
   });
 }
 
-function dateCell(ymd, label, cls) {
+function dateCell(ymd, cls) {
   const greg = formatDate(ymd);
   const hijri = HIJRI_OK ? gregToHijriStr(ymd) : "";
   const useHijri = datePref === "hijri" && !!hijri;
   return (
-    '<td data-label="' +
-    label +
-    '"' +
+    "<td" +
     (cls ? ' class="' + cls + '"' : "") +
     ">" +
     (useHijri ? hijri : greg) +
@@ -169,40 +149,34 @@ function render() {
             ')">إلغاء الإنهاء</button>'
           : "";
       return (
-        '<tr class="row-card' +
-        (isMobile() && !expandedCards.has(String(c.id))
-          ? " folded"
-          : "") +
-        '" data-id="' +
-        c.id +
-        '" onclick="toggleCard(this, event)">' +
-        '<td data-label="#">' +
+        "<tr>" +
+        '<td class="col-id">' +
         c.id +
         "</td>" +
-        '<td data-label="الاسم الكامل"><b>' +
+        '<td class="col-name"><b>' +
         esc(c.name) +
-        '</b><span class="chev">▾</span></td>' +
-        '<td data-label="رقم الهاتف" dir="ltr" style="text-align:right">' +
+        "</b></td>" +
+        '<td dir="ltr" style="text-align:right">' +
         (esc(c.phone) || "—") +
         "</td>" +
-        '<td data-label="رقم العقد">' +
+        "<td>" +
         esc(c.contractNo) +
         "</td>" +
-        '<td data-label="الغرفة">' +
+        "<td>" +
         c.room +
         "</td>" +
-        '<td data-label="السعر">' +
+        "<td>" +
         formatPrice(c.price) +
         "</td>" +
-        dateCell(c.start, "البداية", "") +
-        dateCell(c.end, "النهاية", endCls) +
-        '<td data-label="الحالة">' +
+        dateCell(c.start, "") +
+        dateCell(c.end, endCls) +
+        "<td>" +
         badge +
         "</td>" +
-        '<td data-label="ملاحظات" class="notes-cell">' +
+        '<td class="notes-cell">' +
         (esc(c.notes) || "—") +
         "</td>" +
-        '<td data-label="إجراءات" class="actions-td"><div class="actions">' +
+        '<td class="actions-td"><div class="actions">' +
         endBtn +
         cancelEndBtn +
         '<button class="btn btn-sm btn-success" onclick="openModal(' +

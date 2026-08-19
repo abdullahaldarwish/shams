@@ -18,6 +18,17 @@ function naturalStatus(c) {
   return "current";
 }
 
+function findRoomConflict(room, start, end, excludeId) {
+  return contracts.find(
+    (c) =>
+      c.room === room &&
+      String(c.id) !== String(excludeId) &&
+      computeStatus(c) !== "ended" &&
+      start <= c.end &&
+      c.start <= end,
+  );
+}
+
 function isEndingSoon(c) {
   if (computeStatus(c) !== "current") return false;
   const d = daysUntil(c.end);

@@ -68,6 +68,19 @@ function doCancelEnd() {
   if (pendingCancelEndId == null) return;
   const c = contracts.find((x) => x.id === pendingCancelEndId);
   if (c) {
+    const conflict = findRoomConflict(c.room, c.start, c.end, c.id);
+    if (conflict) {
+      pendingCancelEndId = null;
+      closeCancelEndConfirm();
+      toast(
+        "لا يمكن إلغاء الإنهاء: الغرفة رقم " +
+          c.room +
+          " مشغولة خلال هذه الفترة بعقد رقم " +
+          conflict.id +
+          ".",
+      );
+      return;
+    }
     c.status = naturalStatus(c);
     c.notes =
       (c.notes ? c.notes + "\n" : "") +

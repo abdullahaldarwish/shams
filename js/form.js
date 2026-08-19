@@ -121,12 +121,14 @@ function saveContract(e) {
     return false;
   }
 
-  const roomTaken = contracts.some(
-    (c) => c.room === room && String(c.id) !== id,
-  );
-  if (roomTaken) {
+  const conflict = findRoomConflict(room, start, end, id);
+  if (conflict) {
     errorEl.textContent =
-      "الغرفة رقم " + room + " مشغولة بالفعل بعقد آخر.";
+      "الغرفة رقم " +
+      room +
+      " مشغولة خلال هذه الفترة بعقد رقم " +
+      conflict.id +
+      ".";
     return false;
   }
 
